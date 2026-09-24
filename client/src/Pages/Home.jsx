@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useDispatch,useSelector } from 'react-redux'
 import { control } from '../Redux/slice'
 import Hero from './Hero'
+import Footer from '../components/Footer'
 const Home = ({url}) => {
     const Fetch=async()=>{
       try {
@@ -31,6 +32,7 @@ return (
     <div>
       <Navbar url={url}/>
       <Hero/>
+      <Footer/>
       
     </div>
   )

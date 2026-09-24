@@ -10,6 +10,8 @@ const clientslice=createSlice({
         backendemail:"",
         type:"Sign up",
         navclass:"",
+        Account:"",
+        backendemail2:""
         
 },
 reducers:{
@@ -17,8 +19,14 @@ reducers:{
         const {name,value}=action.payload;
         state.Logindata[name]=value;
     },
+    setbackendemail2(state,action){
+        state.backendemail2=action.payload;
+    },
    setnavclass(state,action){
         state.navclass=action.payload;
+    },
+    setAccount(state,action){
+        state.Account=action.payload;
     },
     setbackendemail(state,action){
         state.backendemail=action.payload;
