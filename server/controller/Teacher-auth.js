@@ -1,4 +1,4 @@
-import Teachermodel from "../models/Teacher-auth-model.js";
+import {Teachermodel} from "../models/Teacher-auth-model.js";
 import bcrypt from "bcrypt"
 import validator from "validator"
 import jwt from "jsonwebtoken"

@@ -182,7 +182,7 @@ const Onchangehandler=(e)=>{
       }
 
     }
-    const Googlelogin2=async()=>{
+    const Googlelogin2=async(e)=>{
       e.preventDefault();
       const provider=new GoogleAuthProvider();
       const result=await signInWithPopup(auth,provider);

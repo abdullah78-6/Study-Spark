@@ -11,13 +11,35 @@ const clientslice=createSlice({
         type:"Sign up",
         navclass:"",
         Account:"",
-        backendemail2:""
+        backendemail2:"",
+        sidemenu:"",
+        image:"",
+        Coursedata:{
+            name:"",
+            description:"",
+            module:"",
+
+        },
+        courseloading:false
         
 },
 reducers:{
     setLogindata(state,action){
         const {name,value}=action.payload;
         state.Logindata[name]=value;
+    },
+    setcourseloading(state,action){
+        state.courseloading=action.payload;
+    },
+    setCoursedata(state,action){
+        const {name,value}=action.payload;
+        state.Coursedata[name]=value;
+    },
+    setimage(state,action){
+        state.image=action.payload;
+    },
+    setsidemenu(state,action){
+        state.sidemenu=action.payload;
     },
     setbackendemail2(state,action){
         state.backendemail2=action.payload;
