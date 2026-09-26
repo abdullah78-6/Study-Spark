@@ -81,7 +81,7 @@ return (
             Dashboard
           </li>
 
-          <li
+          <Link to="/teacher_page/Totalcourses"
             onClick={()=>dispatch(control.setsidemenu("two"))}
             className={`group relative flex items-center gap-3 pl-3.5 pr-3 py-2 rounded-lg cursor-pointer font-medium text-sm transition-all duration-200
               ${sidemenu==="two"
@@ -91,7 +91,7 @@ return (
             <span className={`absolute left-0 top-1/2 -translate-y-1/2 h-4 w-1 rounded-r-full bg-white transition-opacity ${sidemenu==="two" ? "opacity-100" : "opacity-0"}`}></span>
             <FaBook size={14} className={sidemenu==="two" ? "text-white" : "text-sky-400"} />
             Courses
-          </li>
+          </Link>
 
           <Link to="/teacher_page/addcourse"
             onClick={()=>dispatch(control.setsidemenu("three"))}

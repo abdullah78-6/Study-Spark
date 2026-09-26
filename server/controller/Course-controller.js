@@ -47,7 +47,27 @@ const Addcourse=async(req,res)=>{
 
 }
 const Deletecourse=async(req,res)=>{
+    const {_id}=req.body;
     try {
+        if(!req.user||!req.user.id){
+            return res.json({status:false,message:"User not Authenticated"})
+        }
+        if(!_id){
+            return res.json({status:false,message:"Database id is required"})
+        }
+              const teacher=await Teachermodel.findById(req.user.id);
+      if(!teacher){
+        return res.json({status:false,message:"Teacher not found"});
+      }
+      const course=teacher.Course_upload.id(_id);
+      if(!course){
+        return res.json({status:false,message:"Course not found"});
+      }
+      await imagekit.files.delete(course.Fileid);
+      teacher.Course_upload.pull(_id);
+      await teacher.save();
+      return res.json({status:true,message:"Course Deleted Sucessfully"});
+        
         
     } catch (error) {
         console.log('delete course error',error);
@@ -57,11 +77,26 @@ const Deletecourse=async(req,res)=>{
 }
 const Getcourse=async(req,res)=>{
     try {
-        
+        const teacher=await Teachermodel.find({});
+        const result=teacher.flatMap(
+            teacher=>teacher.Course_upload
+        );
+        return  res.json({status:true,result:result});
     } catch (error) {
         console.log("get course error",error);
+    }
+
+}
+const Getcourse_teacher=async(req,res)=>{
+    try {
+        const teacher=await Teachermodel.findById(req.user.id);
+        const result=teacher.Course_upload;
+        return res.json({status:true,result:result});
+        
+    } catch (error) {
+        console.log("get course teacher error ");
         
     }
 
 }
-export {Addcourse,Deletecourse,Getcourse}
+export {Addcourse,Deletecourse,Getcourse,Getcourse_teacher}

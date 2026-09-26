@@ -4,6 +4,7 @@ import axios from 'axios';
 import toast from "react-hot-toast"
 import { control } from '../Redux/slice';
 import {useNavigate} from "react-router-dom"
+import {Link} from "react-router-dom"
 const Navbar = ({url}) => {
     const dispatch=useDispatch()
     const navigate=useNavigate();
@@ -53,18 +54,18 @@ return (
     <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
 
       <div className="shrink-0">
-        <h1
+        <Link to="/"
           onClick={() => dispatch(control.setnavclass(""))}
           className="cursor-pointer text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl"
         >
           Study
           <span className="text-blue-600">·</span>
           <span className="text-blue-600">Spark</span>
-        </h1>
+        </Link>
       </div>
 
       <ul className="hidden items-center justify-center gap-1 md:flex">
-        <li
+        <Link to ="/"
           onClick={() => dispatch(control.setnavclass("home"))}
           className={`cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
             navclass === "home"
@@ -73,10 +74,10 @@ return (
           }`}
         >
           Home
-        </li>
+        </Link>
 
-        <li
-          onClick={() => dispatch(control.setnavclass("Courses"))}
+        <Link to="/course" 
+          onClick={() =>dispatch(control.setnavclass("Courses")) }
           className={`cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
             navclass === "Courses"
               ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
@@ -84,7 +85,7 @@ return (
           }`}
         >
           Courses
-        </li>
+        </Link>
 
         <li
           onClick={() => dispatch(control.setnavclass("Learning"))}
@@ -138,7 +139,7 @@ return (
 
     <div className="mt-3 flex overflow-x-auto border-t border-blue-50 pt-2 md:hidden">
       <ul className="flex min-w-max gap-1">
-        <li
+        <Link to="/"
           onClick={() => dispatch(control.setnavclass("home"))}
           className={`cursor-pointer rounded-lg px-3 py-2 text-xs font-semibold transition-all ${
             navclass === "home"
@@ -147,9 +148,9 @@ return (
           }`}
         >
           Home
-        </li>
+        </Link>
 
-        <li
+        <Link to="/course"
           onClick={() => dispatch(control.setnavclass("Courses"))}
           className={`cursor-pointer rounded-lg px-3 py-2 text-xs font-semibold transition-all ${
             navclass === "Courses"
@@ -158,7 +159,7 @@ return (
           }`}
         >
           Courses
-        </li>
+        </Link>
 
         <li
           onClick={() => dispatch(control.setnavclass("Learning"))}

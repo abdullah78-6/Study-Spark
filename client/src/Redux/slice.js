@@ -20,13 +20,26 @@ const clientslice=createSlice({
             module:"",
 
         },
-        courseloading:false
+        courseloading:false,
+        studentcourse:[],
+        Totalteachercourses:[],
+        displayloading:false,
         
 },
 reducers:{
     setLogindata(state,action){
         const {name,value}=action.payload;
         state.Logindata[name]=value;
+    },
+    setdisplayloading(state,action){
+        state.displayloading=action.payload;
+
+    },
+    setTotalteachercourses(state,action){
+        state.Totalteachercourses=action.payload;
+    },
+    setstudentcourse(state,action){
+        state.studentcourse=action.payload;
     },
     setcourseloading(state,action){
         state.courseloading=action.payload;

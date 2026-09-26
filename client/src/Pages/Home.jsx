@@ -5,7 +5,9 @@ import { useDispatch,useSelector } from 'react-redux'
 import { control } from '../Redux/slice'
 import Hero from './Hero'
 import Footer from '../components/Footer'
+import { Outlet } from 'react-router-dom'
 const Home = ({url}) => {
+  const dispatch=useDispatch()
     const Fetch=async()=>{
       try {
         const res=await axios.get(url+"/api/auth/getprofile",{
@@ -31,8 +33,11 @@ const Home = ({url}) => {
 return (
     <div>
       <Navbar url={url}/>
+      
+      <Outlet/>
       <Hero/>
       <Footer/>
+     
       
     </div>
   )
