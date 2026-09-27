@@ -24,6 +24,12 @@ const clientslice=createSlice({
         studentcourse:[],
         Totalteachercourses:[],
         displayloading:false,
+        quizstatus:false,
+        totalquestions:"",
+        quizlen:false,
+        quizquestions:[],
+        quizsubject:"",
+        totalteacherquiz:[],
         
 },
 reducers:{
@@ -31,12 +37,34 @@ reducers:{
         const {name,value}=action.payload;
         state.Logindata[name]=value;
     },
+    settotalteacherquiz(state,action){
+        state.totalteacherquiz=action.payload;
+    },
+    setquizquestions(state,action){
+        state.quizquestions=action.payload;
+    },
+    setquizsubject(state,action){
+        state.quizsubject=action.payload
+    },
+    setquizlen(state,action){
+        state.quizlen=action.payload;
+    },
+    settotalquestions(state,action){
+        state.totalquestions=action.payload;
+    },
+    setquizstatus(state,action){
+        state.quizstatus=action.payload;
+    },
     setdisplayloading(state,action){
         state.displayloading=action.payload;
 
     },
     setTotalteachercourses(state,action){
         state.Totalteachercourses=action.payload;
+    },
+    updatequizquestion(state,action){
+        const {index,name,value}=action.payload;
+        state.quizquestions[index][name]=value
     },
     setstudentcourse(state,action){
         state.studentcourse=action.payload;

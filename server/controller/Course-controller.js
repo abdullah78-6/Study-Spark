@@ -50,7 +50,7 @@ const Deletecourse=async(req,res)=>{
     const {_id}=req.body;
     try {
         if(!req.user||!req.user.id){
-            return res.json({status:false,message:"User not Authenticated"})
+            return res.json({status:false,message:"Teacher not Authenticated"})
         }
         if(!_id){
             return res.json({status:false,message:"Database id is required"})
