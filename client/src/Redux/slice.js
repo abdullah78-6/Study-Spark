@@ -30,12 +30,24 @@ const clientslice=createSlice({
         quizquestions:[],
         quizsubject:"",
         totalteacherquiz:[],
+        quizmaindata:[],
+        quizid:"",
+        quizdetails:[],
         
 },
 reducers:{
     setLogindata(state,action){
         const {name,value}=action.payload;
         state.Logindata[name]=value;
+    },
+    setquizdetails(state,action){
+        state.quizdetails=action.payload;
+    },
+    setquizid(state,action){
+        state.quizid=action.payload;
+    },
+    setquizmaindata(state,action){
+        state.quizmaindata=action.payload;
     },
     settotalteacherquiz(state,action){
         state.totalteacherquiz=action.payload;

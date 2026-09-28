@@ -9,16 +9,21 @@ const Addquiz=async(req,res)=>{
         if(!quizdata){
             return res.json({status:false,message:"Quiz Data is required"});
         }
+        // OLD SCHEMA THIS WILL NOT ALLOW NEXT--> QUESTION FUNCTIONALITY 
+        // const data={
+        //     subject:quizdata.subject,
+        //     questions:quizdata
+        // }
         const data={
             subject:quizdata.subject,
-            questions:quizdata
+            questions:quizdata.questions
         }
         Teacher.Quiz_upload.push(data);
         await Teacher.save();
         return res.json({status:true,message:"Quiz Added Sucessfully"})
         
     } catch (error) {
-        console.log("Adding quiz error")
+        console.log("Adding quiz error",error)
     }
 }
 const Getquizadmin=async(req,res)=>{
@@ -65,4 +70,17 @@ const Deletequiz=async(req,res)=>{
 
 
 }
-export {Addquiz,Getquizadmin,Deletequiz}
+const Getstudentquiz=async(req,res)=>{
+    try {
+       const teacher =await Teachermodel.find();
+       const quiz=teacher.flatMap(
+        teacher=>teacher.Quiz_upload
+       );
+       return res.json({status:true,result:quiz});
+    } catch (error) {
+        console.log("get quiz student error",error);
+        
+    }
+
+}
+export {Addquiz,Getquizadmin,Deletequiz,Getstudentquiz}

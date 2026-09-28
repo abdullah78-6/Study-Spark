@@ -87,7 +87,7 @@ return (
           Courses
         </Link>
 
-        <li
+        <Link to="/quiz"
           onClick={() => dispatch(control.setnavclass("Learning"))}
           className={`cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
             navclass === "Learning"
@@ -95,10 +95,10 @@ return (
               : "text-slate-600 hover:bg-blue-50 hover:text-blue-600"
           }`}
         >
-          My Learning
-        </li>
+          Mock-Quizes
+        </Link>
 
-        <li
+        <Link to="/Contact-us"
           onClick={() => dispatch(control.setnavclass("Contact"))}
           className={`cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
             navclass === "Contact"
@@ -107,7 +107,7 @@ return (
           }`}
         >
           Contact-us
-        </li>
+        </Link>
       </ul>
 
       <div className="flex items-center gap-3 sm:gap-5">
@@ -161,7 +161,7 @@ return (
           Courses
         </Link>
 
-        <li
+        <Link to="/quiz"
           onClick={() => dispatch(control.setnavclass("Learning"))}
           className={`cursor-pointer rounded-lg px-3 py-2 text-xs font-semibold transition-all ${
             navclass === "Learning"
@@ -169,10 +169,10 @@ return (
               : "text-slate-600 hover:bg-blue-50 hover:text-blue-600"
           }`}
         >
-          My Learning
-        </li>
+          Mock-Quizes
+        </Link>
 
-        <li
+        <Link to="/Contact-us"
           onClick={() => dispatch(control.setnavclass("Contact"))}
           className={`cursor-pointer rounded-lg px-3 py-2 text-xs font-semibold transition-all ${
             navclass === "Contact"
@@ -181,7 +181,7 @@ return (
           }`}
         >
           Contact-us
-        </li>
+        </Link>
       </ul>
     </div>
   </div>

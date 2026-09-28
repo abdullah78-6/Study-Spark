@@ -7,6 +7,7 @@ import Userauthrouter from "./routes/user-auth-route.js"
 import Teacherrouter from "./routes/Teacher-auth-route.js"
 import Courserouter from "./routes/Course-route.js"
 import Quizrouter from "./routes/Quiz-route.js"
+import FeedbackRouter from "./routes/Feedback-routes.js"
 const app=express()
 app.use(cors({
     origin:"http://localhost:5173",
@@ -29,6 +30,7 @@ app.use("/api/auth/",Userauthrouter);
 app.use("/api/teach/",Teacherrouter);
 app.use("/api/course/",Courserouter);
 app.use("/api/quiz/",Quizrouter);
+app.use("/api/feedback/",FeedbackRouter);
 const port=process.env.PORT
 app.listen(port,()=>{
     console.log("server is listning on ",port);
