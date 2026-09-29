@@ -33,12 +33,16 @@ const clientslice=createSlice({
         quizmaindata:[],
         quizid:"",
         quizdetails:[],
+        feedbacks:[]
         
 },
 reducers:{
     setLogindata(state,action){
         const {name,value}=action.payload;
         state.Logindata[name]=value;
+    },
+    setfeedbacks(state,action){
+        state.feedbacks=action.payload;
     },
     setquizdetails(state,action){
         state.quizdetails=action.payload;

@@ -178,7 +178,7 @@ return (
             Add PYQs
           </li>
 
-          <li
+          <Link to="/teacher_page/feedback"
             onClick={()=>dispatch(control.setsidemenu("ten"))}
             className={`group relative flex items-center gap-3 pl-3.5 pr-3 py-2 rounded-lg cursor-pointer font-medium text-sm transition-all duration-200
               ${sidemenu==="ten"
@@ -188,7 +188,7 @@ return (
             <span className={`absolute left-0 top-1/2 -translate-y-1/2 h-4 w-1 rounded-r-full bg-white transition-opacity ${sidemenu==="ten" ? "opacity-100" : "opacity-0"}`}></span>
             <MdOutlineFeedback size={16} className={sidemenu==="ten" ? "text-white" : "text-sky-400"} />
             Feedbacks
-          </li>
+          </Link>
 
         </ul>
 

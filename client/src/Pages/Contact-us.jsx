@@ -2,17 +2,11 @@ import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import {
-    FaEnvelope,
-    FaPhoneAlt,
-    FaMapMarkerAlt,
-    FaPaperPlane,
-    FaGraduationCap,
-    FaCheck
-} from 'react-icons/fa'
-
-/* ---------- Floating-label field (works for input + textarea) ---------- */
-
+import axios from "axios"
+import toast from "react-hot-toast"
+import {FaEnvelope,FaPhoneAlt,FaMapMarkerAlt,FaPaperPlane,FaGraduationCap,FaCheck} from 'react-icons/fa'
+import { control } from '../Redux/slice'
+import { useDispatch,useSelector } from 'react-redux'
 const Field = ({ label, name, type = 'text', value, onChange, textarea = false }) => {
     const shared =
         'peer w-full rounded-xl border border-blue-100 bg-blue-50/40 px-4 pt-6 pb-2 text-gray-800 outline-none placeholder-transparent transition focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100'
@@ -54,9 +48,6 @@ const Field = ({ label, name, type = 'text', value, onChange, textarea = false }
         </div>
     )
 }
-
-/* ---------- Contact info row (left panel) ---------- */
-
 const InfoRow = ({ icon: Icon, title, text, href }) => {
     const Tag = href ? motion.a : motion.div
     return (
@@ -80,41 +71,53 @@ const InfoRow = ({ icon: Icon, title, text, href }) => {
         </Tag>
     )
 }
-
-/* ---------- Page ---------- */
-
 const Contact = ({ url }) => {
     const reduceMotion = useReducedMotion()
-
+    const backendemail=useSelector(state=>state.main.backendemail);
     const [formdata, setformdata] = useState({
         name: '',
         email: '',
         subject: '',
         message: ''
     })
-
-    // idle | sending | sent
-    const [status, setStatus] = useState('idle')
+ const [status, setStatus] = useState('idle')
 
     const handlechange = (e) => {
         const { name, value } = e.target
         setformdata({ ...formdata, [name]: value })
     }
 
-    const handlesubmit = (e) => {
+    const handlesubmit=async(e)=> {
         e.preventDefault()
-        setStatus('sending')
-
-        console.log(formdata)
-
-        // Replace this timeout with your real API call, then set 'sent' on success.
-        setTimeout(() => {
+        if(!backendemail){
+            toast.error("User Login Required");
+            return ;
+        }
+        try {
+        // setStatus('sending')
+        const res=await axios.post(url+"/api/feedback/add_feedback",formdata,{
+            
+    withCredentials:true,
+            
+        })
+        if(res.data.status){
+            setStatus("sending");
+            setTimeout(() => {
             setStatus('sent')
             setformdata({ name: '', email: '', subject: '', message: '' })
         }, 900)
+        }
+        else{
+            setStatus("idle")
+            toast.error(res.data.message);
+        }
+    } 
+    catch (error) {
+            
+        }
     }
 
-    // Form progress: each filled field adds 25%
+    
     const filled = Object.values(formdata).filter((v) => v.trim() !== '').length
     const progress = (filled / 4) * 100
 
@@ -125,6 +128,7 @@ const Contact = ({ url }) => {
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-blue-50/60 to-white">
+            
             <Navbar url={url} />
 
             <section className="px-4 py-12 sm:px-6 md:py-20">
