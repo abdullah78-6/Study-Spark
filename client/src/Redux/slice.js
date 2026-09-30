@@ -10,7 +10,7 @@ const clientslice=createSlice({
         backendemail:"",
         type:"Sign up",
         navclass:"",
-        Account:"",
+        Account:"student",
         backendemail2:"",
         sidemenu:"",
         image:"",

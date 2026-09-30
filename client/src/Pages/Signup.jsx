@@ -295,36 +295,63 @@ return (
 
         <form onSubmit={Account==="teacher"?Submit2:Submit} className="flex flex-col gap-4">
           {type === "Sign up" && (
-            <Field
-              id="name"
-              label="Full name"
-              name="name"
-              type="text"
-              value={Authdata.name}
-              onChange={Onchangehandler}
-              placeholder="Ada Lovelace"
-            />
-          )}
+  <div className="group">
+    <label
+      htmlFor="name"
+      className="mb-2 block text-sm font-semibold text-slate-700 transition-colors duration-200 group-focus-within:text-blue-600"
+    >
+      Full name
+    </label>
 
-          <Field
-            id="email"
-            label="Email address"
-            name="email"
-            type="email"
-            value={Authdata.email}
-            onChange={Onchangehandler}
-            placeholder="you@school.edu"
-          />
+    <input
+      id="name"
+      name="name"
+      type="text"
+      value={Authdata.name}
+      onChange={Onchangehandler}
+      placeholder="Ada Lovelace"
+      className="w-full rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3.5 text-[15px] text-slate-800 outline-none transition-all duration-200 placeholder:text-slate-400 hover:border-blue-200 hover:bg-white focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+    />
+  </div>
+)}
 
-          <Field
-            id="password"
-            label="Password"
-            name="password"
-            type="password"
-            value={Authdata.password}
-            onChange={Onchangehandler}
-            placeholder="At least 8 characters"
-          />
+<div className="group">
+  <label
+    htmlFor="email"
+    className="mb-2 block text-sm font-semibold text-slate-700 transition-colors duration-200 group-focus-within:text-blue-600"
+  >
+    Email address
+  </label>
+
+  <input
+    id="email"
+    name="email"
+    type="email"
+    value={Authdata.email}
+    onChange={Onchangehandler}
+    placeholder="you@school.edu"
+    className="w-full rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3.5 text-[15px] text-slate-800 outline-none transition-all duration-200 placeholder:text-slate-400 hover:border-blue-200 hover:bg-white focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+  />
+</div>
+
+<div className="group">
+  <label
+    htmlFor="password"
+    className="mb-2 block text-sm font-semibold text-slate-700 transition-colors duration-200 group-focus-within:text-blue-600"
+  >
+    Password
+  </label>
+
+  <input
+    id="password"
+    name="password"
+    type="password"
+    value={Authdata.password}
+    onChange={Onchangehandler}
+    placeholder="At least 8 characters"
+    className="w-full rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3.5 text-[15px] text-slate-800 outline-none transition-all duration-200 placeholder:text-slate-400 hover:border-blue-200 hover:bg-white focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+  />
+</div>
           <div className='flex justify-center items-center font-serif flex-col'>
             {type==="Sign up"?<h1 className='text-blue-600 text-xl'>Account Type</h1>:<h1 className='text-blue-600 text-xl '>Login Type</h1>}
             <ul className='flex justify-center items-center gap-5 mt-3'>
@@ -390,38 +417,5 @@ return (
     </div>
   </div>
 );
-
-function Field({ id, label, name, type, value, onChange, placeholder }) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label
-        htmlFor={id}
-        className="text-sm font-semibold text-slate-700"
-      >
-        {label}
-      </label>
-
-      <input
-        id={id}
-        name={name}
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        autoComplete="off"
-        required
-        className="w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-3 text-[15px] text-slate-900 outline-none transition-all duration-200 placeholder:text-slate-400 hover:border-blue-300 hover:bg-white focus:border-blue-600 focus:bg-white focus:ring-4 focus:ring-blue-600/10"
-      />
-      
-    </div>
-  );
 }
-
-
-}
-
-
-  
-
-
 export default Signup
