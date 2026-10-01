@@ -8,6 +8,7 @@ import Footer from '../components/Footer'
 import { Outlet } from 'react-router-dom'
 import About from './About'
 import Feature from './Feature'
+import Content from './Content'
 const Home = ({url}) => {
   const dispatch=useDispatch()
     const Fetch=async()=>{
@@ -35,11 +36,11 @@ const Home = ({url}) => {
 return (
     <div>
       <Navbar url={url}/>
-      
       <Outlet/>
       <Hero/>
       <About/>
       <Feature/>
+      <Content/>
       <Footer/>
      
       

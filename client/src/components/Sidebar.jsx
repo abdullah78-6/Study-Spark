@@ -40,6 +40,7 @@ const Sidebar = ({url}) => {
         });
         if(response.data.status){
             dispatch(control.setbackendemail2(""));
+            navigate("/Login");
             
             
         toast.success(response.data.message);

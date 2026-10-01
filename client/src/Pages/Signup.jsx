@@ -6,6 +6,7 @@ import {toast} from "react-hot-toast"
 import { FcGoogle } from "react-icons/fc";
 import { GoogleAuthProvider , signInWithPopup } from "firebase/auth";
 import { auth } from '../../firebase'
+import { useNavigate } from 'react-router-dom'
 const Signup = ({url}) => {
 const dispatch=useDispatch(); 
 const Authdata=useSelector(state=>state.main.Logindata);
@@ -14,6 +15,7 @@ const backendemail2=useSelector(state=>state.main.backendemail2);
 const type=useSelector(state=>state.main.type);
 const Account=useSelector(state=>state.main.Account);
 const setbackendemail2=useSelector(state=>state.main.setbackendemail2);
+const navigate=useNavigate();
 const Onchangehandler=(e)=>{
   dispatch(control.setLogindata({
         name:e.target.name,
@@ -84,6 +86,7 @@ const Onchangehandler=(e)=>{
         })
         if(res.data.status){
             dispatch(control.setbackendemail(res.data.email));
+            navigate("/")
        }
         else{
             dispatch(control.setbackendemail(""));
@@ -128,6 +131,7 @@ const Onchangehandler=(e)=>{
           toast.success(res.data.message);
           Fetch();
           dispatch(control.setbackendemail(res.data.email));
+          navigate("/")
         }
         else{
         toast.error(res.data.message);
@@ -160,6 +164,7 @@ const Onchangehandler=(e)=>{
         })
         if(res.data.status){
             dispatch(control.setbackendemail2(res.data.email));
+            navigate("/teacher_page")
        }
         else{
             dispatch(control.setbackendemail2(""));
@@ -203,6 +208,7 @@ const Onchangehandler=(e)=>{
           toast.success(res.data.message);
           Fetch2();
           dispatch(control.setbackendemail2(res.data.email));
+          navigate("/teacher_page")
         }
         else{
         toast.error(res.data.message);
