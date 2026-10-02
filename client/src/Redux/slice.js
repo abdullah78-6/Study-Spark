@@ -20,6 +20,12 @@ const clientslice=createSlice({
             module:"",
 
         },
+        Notesdata:{
+            authorname:"",
+            subject:"",
+            status:"",
+            price:""
+        },
         courseloading:false,
         studentcourse:[],
         Totalteachercourses:[],
@@ -33,13 +39,29 @@ const clientslice=createSlice({
         quizmaindata:[],
         quizid:"",
         quizdetails:[],
-        feedbacks:[]
+        feedbacks:[],
+        notesfile:"",
+        notesloading:false,
+        Notes:[]
         
 },
 reducers:{
     setLogindata(state,action){
         const {name,value}=action.payload;
         state.Logindata[name]=value;
+    },
+    setNotes(state,action){
+        state.Notes=action.payload;
+    },
+    setnotesloading(state,action){
+        state.notesloading=action.payload;
+    },
+    setNotesdata(state,action){
+        const {name,value}=action.payload;
+        state.Notesdata[name]=value;
+    },
+    setnotesfile(state,action){
+        state.notesfile=action.payload;
     },
     setfeedbacks(state,action){
         state.feedbacks=action.payload;
