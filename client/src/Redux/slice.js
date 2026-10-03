@@ -26,6 +26,13 @@ const clientslice=createSlice({
             status:"",
             price:""
         },
+        pyqdata:{
+            authorname:"",
+            collegename:"",
+            subject:"",
+            status:"",
+            price:""
+        },
         courseloading:false,
         studentcourse:[],
         Totalteachercourses:[],
@@ -42,13 +49,29 @@ const clientslice=createSlice({
         feedbacks:[],
         notesfile:"",
         notesloading:false,
-        Notes:[]
+        Notes:[],
+        pyqfile:"",
+        pyqloading:false,
+        pyq:[],
         
 },
 reducers:{
     setLogindata(state,action){
         const {name,value}=action.payload;
         state.Logindata[name]=value;
+    },
+    setpyq(state,action){
+        state.pyq=action.payload;
+    },
+    setpyqloading(state,action){
+        state.pyqloading=action.payload;
+    },
+    setpyqfile(state,action){
+        state.pyqfile=action.payload;
+    },
+    setpyqdata(state,action){
+        const {name,value}=action.payload;
+        state.pyqdata[name]=value;
     },
     setNotes(state,action){
         state.Notes=action.payload;

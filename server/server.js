@@ -9,6 +9,7 @@ import Courserouter from "./routes/Course-route.js"
 import Quizrouter from "./routes/Quiz-route.js"
 import FeedbackRouter from "./routes/Feedback-routes.js"
 import Notesrouter from "./routes/Notes-route.js"
+import Pyqrouter from "./routes/PYQ-route.js"
 const app=express()
 app.use(cors({
     origin:"http://localhost:5173",
@@ -33,6 +34,7 @@ app.use("/api/course/",Courserouter);
 app.use("/api/quiz/",Quizrouter);
 app.use("/api/feedback/",FeedbackRouter);
 app.use("/api/notes/",Notesrouter);
+app.use("/api/pyq/",Pyqrouter);
 const port=process.env.PORT
 app.listen(port,()=>{
     console.log("server is listning on ",port);

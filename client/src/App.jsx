@@ -19,6 +19,8 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import Addnotes from "./Pages/Teacherpages/Addnotes"
 import Dispalynotex from "./Pages/Teacherpages/Dispalynotex"
+import Addpyq from "./Pages/Teacherpages/Addpyq"
+import Displaypyq from "./Pages/Teacherpages/Displaypyq"
 function App() {
   const url="http://localhost:5000"
   const dispatch=useDispatch();
@@ -81,7 +83,9 @@ function App() {
     <Route path="addcourse" element={<Addcourse url={url}/>}></Route>
     <Route path="Totalcourses" element={<Displayteachercourse url={url}/>}></Route>
     <Route path="addnotes" element={<Addnotes url={url}/>}></Route>
+    <Route path="addpyq" element={<Addpyq url={url}/>}></Route>
     <Route path="displaynotes" element={<Dispalynotex url={url}/>}></Route>
+    <Route path="displaypyq" element={<Displaypyq url={url}/>}></Route>
     <Route path="addquiz" element={<Addquiz url={url}/>}></Route>
     <Route path="totalquiz" element={<Displayquiz url={url}/>}></Route>
     <Route path="feedback" element={<Feedback url={url}/>}></Route>

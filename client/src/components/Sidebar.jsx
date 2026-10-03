@@ -155,7 +155,7 @@ return (
             Add Notes
           </Link>
 
-          <li
+          <Link to="/teacher_page/displaypyq" 
             onClick={()=>dispatch(control.setsidemenu("eight"))}
             className={`group relative flex items-center gap-3 pl-3.5 pr-3 py-2 rounded-lg cursor-pointer font-medium text-sm transition-all duration-200
               ${sidemenu==="eight"
@@ -165,9 +165,9 @@ return (
             <span className={`absolute left-0 top-1/2 -translate-y-1/2 h-4 w-1 rounded-r-full bg-white transition-opacity ${sidemenu==="eight" ? "opacity-100" : "opacity-0"}`}></span>
             <FaFileAlt size={13} className={sidemenu==="eight" ? "text-white" : "text-sky-400"} />
             PYQs
-          </li>
+          </Link>
 
-          <li
+          <Link to="/teacher_page/addpyq"
             onClick={()=>dispatch(control.setsidemenu("nine"))}
             className={`group relative flex items-center gap-3 pl-3.5 pr-3 py-2 rounded-lg cursor-pointer font-medium text-sm transition-all duration-200
               ${sidemenu==="nine"
@@ -177,7 +177,7 @@ return (
             <span className={`absolute left-0 top-1/2 -translate-y-1/2 h-4 w-1 rounded-r-full bg-white transition-opacity ${sidemenu==="nine" ? "opacity-100" : "opacity-0"}`}></span>
             <FaPlusCircle size={13} className={sidemenu==="nine" ? "text-white" : "text-sky-400"} />
             Add PYQs
-          </li>
+          </Link>
 
           <Link to="/teacher_page/feedback"
             onClick={()=>dispatch(control.setsidemenu("ten"))}
