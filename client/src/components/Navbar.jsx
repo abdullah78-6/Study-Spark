@@ -108,6 +108,26 @@ return (
         >
           Contact-us
         </Link>
+         <Link to="/Notes"
+          onClick={() => dispatch(control.setnavclass("Notes"))}
+          className={`cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
+            navclass === "Notes"
+              ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+              : "text-slate-600 hover:bg-blue-50 hover:text-blue-600"
+          }`}
+        >
+          Notes
+        </Link>
+        <Link to="/PYQs"
+          onClick={() => dispatch(control.setnavclass("PYQ"))}
+          className={`cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
+            navclass === "PYQ"
+              ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+              : "text-slate-600 hover:bg-blue-50 hover:text-blue-600"
+          }`}
+        >
+          PYQs
+        </Link>
       </ul>
 
       <div className="flex items-center gap-3 sm:gap-5">
@@ -181,6 +201,26 @@ return (
           }`}
         >
           Contact-us
+        </Link>
+        <Link to="/Notes"
+          onClick={() => dispatch(control.setnavclass("Notes"))}
+          className={`cursor-pointer rounded-lg px-3 py-2 text-xs font-semibold transition-all ${
+            navclass === "Notes"
+              ? "bg-blue-600 text-white"
+              : "text-slate-600 hover:bg-blue-50 hover:text-blue-600"
+          }`}
+        >
+          Notes
+        </Link>
+        <Link to="/PYQs"
+          onClick={() => dispatch(control.setnavclass("PYQ"))}
+          className={`cursor-pointer rounded-lg px-3 py-2 text-xs font-semibold transition-all ${
+            navclass === "PYQ"
+              ? "bg-blue-600 text-white"
+              : "text-slate-600 hover:bg-blue-50 hover:text-blue-600"
+          }`}
+        >
+          PYQs
         </Link>
       </ul>
     </div>

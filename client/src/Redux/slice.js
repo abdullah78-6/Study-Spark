@@ -53,12 +53,24 @@ const clientslice=createSlice({
         pyqfile:"",
         pyqloading:false,
         pyq:[],
+        pyqclient:[],
+        notesclient:[],
+        searchpyq:""
         
 },
 reducers:{
     setLogindata(state,action){
         const {name,value}=action.payload;
         state.Logindata[name]=value;
+    },
+    setsearchpyq(state,action){
+        state.searchpyq=action.payload;
+    },
+    setnotesclient(state,action){
+        state.notesclient=action.payload;
+    },
+    setpyqclient(state,action){
+        state.pyqclient=action.payload;
     },
     setpyq(state,action){
         state.pyq=action.payload;

@@ -93,4 +93,16 @@ const Deletenotes=async(req,res)=>{
     }
 
 }
-export {Addnotes,Getnotes,Deletenotes}
+const Getnotesclient=async(req,res)=>{
+    try {
+        const teacher =await Teachermodel.find();
+       const notes=teacher.flatMap(
+        teacher=>teacher.Notes_upload
+       );
+       return res.json({status:true,result:notes});
+    } catch (error) {
+        console.log("get notes client error",error);
+    }
+
+}
+export {Addnotes,Getnotes,Deletenotes,Getnotesclient}

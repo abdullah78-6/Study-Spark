@@ -21,6 +21,8 @@ import Addnotes from "./Pages/Teacherpages/Addnotes"
 import Dispalynotex from "./Pages/Teacherpages/Dispalynotex"
 import Addpyq from "./Pages/Teacherpages/Addpyq"
 import Displaypyq from "./Pages/Teacherpages/Displaypyq"
+import Pyq from "./Pages/Pyq"
+import Notes from "./Pages/Notes"
 function App() {
   const url="http://localhost:5000"
   const dispatch=useDispatch();
@@ -77,6 +79,8 @@ function App() {
     <Route path="/" element={<Home url={url}/>}></Route>
     <Route path="/course" element={<Course url={url}/>}></Route>
     <Route path="/quiz" element={<Quiz url={url}/>}></Route>
+    <Route path="/PYQs" element={<Pyq url={url}/>}></Route>
+    <Route path="/Notes" element={<Notes url={url}/>}></Route>
     <Route path="/quiz_details" element={<Quizdetails url={url}/>}></Route>
     <Route path="/Contact-us" element={<Contact url={url}/>}></Route>
     <Route path="/teacher_page" element={backendemail2?<Teacher_Homepage url={url}/>:<Navigate to="/Login" replace/>}>

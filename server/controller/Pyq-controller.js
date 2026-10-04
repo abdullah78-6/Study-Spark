@@ -86,4 +86,16 @@ const Deletepyq=async(req,res)=>{
         console.log("delete pyq error",error);
     }
 }
-export {Addpyq,Getpyqteacher,Deletepyq};
+const Getpyqclient=async(req,res)=>{
+    try {
+        const teacher =await Teachermodel.find();
+       const pyqs=teacher.flatMap(
+        teacher=>teacher.PYQ_upload
+       );
+       return res.json({status:true,result:pyqs});
+    } catch (error) {
+        console.log("get pyq client error",error);
+    }
+
+}
+export {Addpyq,Getpyqteacher,Deletepyq,Getpyqclient};
