@@ -10,6 +10,8 @@ import Quizrouter from "./routes/Quiz-route.js"
 import FeedbackRouter from "./routes/Feedback-routes.js"
 import Notesrouter from "./routes/Notes-route.js"
 import Pyqrouter from "./routes/PYQ-route.js"
+import NodeCache from "node-cache"
+import { cacheMiddleware } from "./middleware/cache-middleware.js"
 const app=express()
 app.use(cors({
     origin:"http://localhost:5173",
@@ -18,7 +20,7 @@ app.use(cors({
 app.use(express.json())
 app.use(cookieParser())
 Dbconnect();
-app.get("/",(req,res)=>{
+app.get("/",cacheMiddleware(300),(req,res)=>{
     try{
         return res.status(200).send({message:"Server is ready to work"})
     }

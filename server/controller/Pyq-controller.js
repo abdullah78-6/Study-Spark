@@ -98,4 +98,33 @@ const Getpyqclient=async(req,res)=>{
     }
 
 }
-export {Addpyq,Getpyqteacher,Deletepyq,Getpyqclient};
+const Searchapi=async(req,res)=>{
+    const {searchpyq}=req.query;
+    try {
+    if(!searchpyq||searchpyq.trim()===""){
+        return res.json({status:false,message:"Please enter college name"});
+    }
+    const teachers=await Teachermodel.find({
+        "PYQ_upload.college_name":{
+            $regex:searchpyq.trim(),
+            $options:"i"
+        }
+    });
+    const pyqs=teachers.flatMap((teacher)=>{
+       return  teacher.PYQ_upload.filter((pyq)=>
+            pyq.college_name.toLowerCase().includes(searchpyq.trim().toLowerCase())
+        );
+       
+    });
+     if(pyqs.length===0){
+            return res.json({status:false,message:"PYQ not found",result:[]});
+    }
+    return res.json({status:true,result:pyqs});
+    
+
+    } catch (error) {
+        console.log("search api error",error);
+    }
+
+}
+export {Addpyq,Getpyqteacher,Deletepyq,Getpyqclient,Searchapi};
