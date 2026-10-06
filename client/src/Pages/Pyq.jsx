@@ -5,11 +5,16 @@ import { control } from '../Redux/slice'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import Pdfviewer from './Pdfviewer'
+import { useDebounce } from 'use-debounce';
+import { useDebouncedCallback } from 'use-debounce';
 const Pyq = ({url}) => {
 const dispatch=useDispatch();
   const pyqclient=useSelector(state=>state.main.pyqclient);
   const searchpyq=useSelector(state=>state.main.searchpyq);
   const [chk,setchk]=useState(false);
+  const debounced=useDebouncedCallback((value)=>{
+  dispatch(control.setsearchpyq(value))
+  },1000)
   const Fetchpyq=async()=>{
     try {
       const res=await axios.get(url+"/api/pyq/get_pyq_client",{
@@ -45,16 +50,15 @@ const dispatch=useDispatch();
     Fetchpyq();
   }
   else{
-    Searchapi();
-  }
-    
+  Searchapi();
+}
 },[searchpyq])
   return (
     <div>
       
       <Navbar url={url}/>
       {pyqclient.length===0&&<h1>No pyq Found </h1>}
-      <input onChange={(e)=>dispatch(control.setsearchpyq(e.target.value))} type="text"placeholder='Search by college '/>
+      <input onChange={(e)=>debounced(e.target.value)} type="text"placeholder='Search by college '/>
       {pyqclient.map((i,index)=>(
         <div key={i._id}>
           <div className={`${chk?"hidden":"block"}`}>

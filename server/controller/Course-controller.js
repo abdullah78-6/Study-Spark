@@ -3,8 +3,8 @@ import imagekit from "../utils/imagekit.js"
 import fs from "fs"
 const Addcourse=async(req,res)=>{
     try {
-        const {name,module,description}=req.body;
-        if(!name||!module||!description){
+        const {name,module,description,urls}=req.body;
+        if(!name||!module||!description||urls.length===0){
             return res.json({status:false,message:"All Fields Are Required"});
         }
         
@@ -24,7 +24,9 @@ const Addcourse=async(req,res)=>{
             module:module,
             description:description,
             image_address:result.url,
-            Fileid:result.fileId
+            Fileid:result.fileId,
+            urls:urls
+
         }
         user.Course_upload.push(data);
         const newcourse=new Coursemodel({

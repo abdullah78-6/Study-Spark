@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { control } from '../../Redux/slice'
 import {useDispatch,useSelector} from "react-redux"
 import axios from "axios"
@@ -12,13 +12,38 @@ const labelClass = "mb-1.5 block text-sm font-semibold text-slate-700";
   const backendemail2=useSelector(state=>state.main.backendemail2);
   const Coursedata=useSelector(state=>state.main.Coursedata);
   const courseloading=useSelector(state=>state.main.courseloading);
-  const Onchangehandler=(e)=>{
+  const[urls,seturl]=useState([]);
+  const[mod,setmod]=useState(false);
+ const Onchangehandler=(e)=>{
     dispatch(control.setCoursedata({
       name:e.target.name,
       value:e.target.value
     }))
-
-  }
+  
+    
+}
+const handlerurlchange=(index,value)=>{
+  seturl(prevurl=>{
+    const newurl=[...prevurl]
+    newurl[index]=value;
+    return newurl
+  })
+ }
+ const Handlesetmodules=()=>{
+    const modulecount=Number(Coursedata.module);
+    if(!modulecount||modulecount<1){
+      toast.error("Please enter a valid number of modules");
+      return 
+    }
+    const newurls=Array.from(
+  {length:modulecount},
+  ()=>""
+  )
+  seturl(newurls)
+  setmod(true)
+ 
+ } 
+ 
   const Addcourse=async(e)=>{
     e.preventDefault()
     if(!backendemail2){
@@ -29,11 +54,17 @@ const labelClass = "mb-1.5 block text-sm font-semibold text-slate-700";
       toast.error("Image is required");
       return ;
     }
+    if(urls.length!==Number(Coursedata.module)
+    ||urls.some(item=>item.trim()==="")){
+      toast.error("Please enter URL for every module");
+      return ;
+    }
     const formdata=new FormData();
     formdata.append("name",Coursedata.name);
     formdata.append("module",Coursedata.module);
     formdata.append("description",Coursedata.description);
     formdata.append("image",image)
+    formdata.append("urls",JSON.stringify(urls));
     dispatch(control.setcourseloading(true));
     try {
       dispatch(control.setcourseloading(true));
@@ -56,6 +87,9 @@ const labelClass = "mb-1.5 block text-sm font-semibold text-slate-700";
     }
 
   }
+  useEffect(()=>{
+    
+  },[Coursedata.module]);
   return (
     <div className='flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-cyan-50 px-4 py-10 sm:px-6'>
       <div className='relative w-full max-w-xl overflow-hidden rounded-3xl border border-blue-100 bg-white shadow-xl shadow-blue-600/10'>
@@ -166,7 +200,32 @@ const labelClass = "mb-1.5 block text-sm font-semibold text-slate-700";
               className={inputClass}
             />
           </div>
- 
+         <button onClick={Handlesetmodules} type="button" className='mt-2 w-full rounded-xl bg-blue-600 px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-blue-600/30 transition hover:bg-blue-700'>
+          {mod?"Update Modules":"Set Modules"}
+         </button>
+         {mod&&urls.length>0&&(
+          <div>
+            <label className={labelClass}>
+              Add Module URLs
+            </label>
+            <div className='flex flex-col gap-4'>
+              {urls.map((item,index)=>(
+                <div key={index}>
+                  <label className='mb-1 block text-sm font-medium text-slate-600' >Module {index+1} </label>
+                  <input value={item}
+                  onChange={(e)=>handlerurlchange(index,e.target.value)}
+                  className={inputClass}
+                  type="url"
+                  placeholder={`Enter URL for Module ${index+1}`}
+                  required
+                  />
+                  </div>
+              ))}
+
+            </div>
+          </div>
+         )}
+         
           <button
             type="submit"
             disabled={courseloading}
