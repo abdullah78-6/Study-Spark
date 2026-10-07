@@ -18,6 +18,7 @@ const clientslice=createSlice({
             name:"",
             description:"",
             module:"",
+            demo:""
 
         },
         Notesdata:{
@@ -55,13 +56,27 @@ const clientslice=createSlice({
         pyq:[],
         pyqclient:[],
         notesclient:[],
-        searchpyq:""
+        searchpyq:"",
+        detailcourse:{
+            name:null,
+            image:null,
+            id:null,
+            modules:null,
+            description:null,
+            urls:[],
+            demo:null
+        }
+
+        
         
 },
 reducers:{
     setLogindata(state,action){
         const {name,value}=action.payload;
         state.Logindata[name]=value;
+    },
+    setdetailcourse(state,action){
+        state.detailcourse=action.payload;
     },
     setsearchpyq(state,action){
         state.searchpyq=action.payload;

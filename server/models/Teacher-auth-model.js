@@ -5,7 +5,8 @@ const Courseschema=new mongoose.Schema({
     description:{type:String,require:true},
     image_address:{type:String,require:true},
     Fileid:{type:String,require:true},
-    urls:{type:Array,require:true}
+    urls:{type:Array,require:true},
+    demo:{type:String,require:true}
 });
 const Quizschema=new mongoose.Schema({
     questions:{type:Array,require:true},

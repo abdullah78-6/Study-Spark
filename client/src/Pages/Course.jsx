@@ -4,6 +4,7 @@ import Footer from '../components/Footer'
 import { control } from '../Redux/slice'
 import axios from "axios"
 import {useSelector,useDispatch} from "react-redux"
+import { useNavigate } from 'react-router-dom'
 const Course = ({url}) => {
   const dispatch=useDispatch();
   const studentcourse=useSelector(state=>state.main.studentcourse);
@@ -23,6 +24,21 @@ const Course = ({url}) => {
   useEffect(()=>{
     Fetchcourse();
   },[])
+  const navigate=useNavigate();
+  const detailcourse=useSelector(state=>state.main.detailcourse);
+  const Detailsredirect=(name,image,id,modules,description,urls,demo)=>{
+    dispatch(control.setdetailcourse({
+      name:name,
+      image:image,
+      id:id,
+      modules:modules,
+      description:description,
+      urls:urls,
+      demo:demo
+    }))
+    navigate("/course_details");
+
+  }
   return (
     <div>
     <Navbar url={url}/>
@@ -33,7 +49,7 @@ const Course = ({url}) => {
           <img className='w-20' src={i.image_address} alt={i.name}/>
           <h1>CourseName:{i.name}</h1>
           <h1>TotalModules:{i.module}</h1>
-          <button>Details</button>
+          <button onClick={()=>Detailsredirect(i.name,i.image_address,i._id,i.module,i.description,i.urls,i.demo)}>Details</button>
           </div>
 
         </div>

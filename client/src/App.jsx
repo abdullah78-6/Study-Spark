@@ -23,6 +23,7 @@ import Addpyq from "./Pages/Teacherpages/Addpyq"
 import Displaypyq from "./Pages/Teacherpages/Displaypyq"
 import Pyq from "./Pages/Pyq"
 import Notes from "./Pages/Notes"
+import Couresedetail from "./Pages/Couresedetail"
 function App() {
   const url="http://localhost:5000"
   const dispatch=useDispatch();
@@ -70,6 +71,7 @@ function App() {
       </div>
       )
     }
+  
   return (
     <div>
   
@@ -77,11 +79,13 @@ function App() {
     
     <Route path="/Login" element={<Signup url={url}/>}></Route>
     <Route path="/" element={<Home url={url}/>}></Route>
+    
     <Route path="/course" element={<Course url={url}/>}></Route>
     <Route path="/quiz" element={<Quiz url={url}/>}></Route>
     <Route path="/PYQs" element={<Pyq url={url}/>}></Route>
     <Route path="/Notes" element={<Notes url={url}/>}></Route>
     <Route path="/quiz_details" element={<Quizdetails url={url}/>}></Route>
+    <Route path="/course_details" element={<Couresedetail url={url}/>}></Route>
     <Route path="/Contact-us" element={<Contact url={url}/>}></Route>
     <Route path="/teacher_page" element={backendemail2?<Teacher_Homepage url={url}/>:<Navigate to="/Login" replace/>}>
     <Route path="addcourse" element={<Addcourse url={url}/>}></Route>
@@ -102,4 +106,4 @@ function App() {
   )
 }
 
-export default App
+export default App 

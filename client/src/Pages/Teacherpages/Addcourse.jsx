@@ -63,6 +63,7 @@ const handlerurlchange=(index,value)=>{
     formdata.append("name",Coursedata.name);
     formdata.append("module",Coursedata.module);
     formdata.append("description",Coursedata.description);
+    formdata.append("demo",Coursedata.demo);
     formdata.append("image",image)
     formdata.append("urls",JSON.stringify(urls));
     dispatch(control.setcourseloading(true));
@@ -184,6 +185,20 @@ const handlerurlchange=(index,value)=>{
               className={`${inputClass} resize-none`}
             />
           </div>
+            <div>
+            <label htmlFor='demo' className={labelClass}>Intro Video URL</label>
+            <input
+              onChange={Onchangehandler}
+              name="demo"
+              value={Coursedata.demo}
+              id="demo"
+              required
+              type="url"
+              placeholder='Intro Video Link'
+              className={`${inputClass} resize-none`}
+            />
+          </div>
+ 
  
           {/* Modules */}
           <div>

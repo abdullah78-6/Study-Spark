@@ -33,10 +33,12 @@ const Home = ({url}) => {
       Fetch();
 
     },[])
+    
 return (
     <div>
       <Navbar url={url}/>
       <Outlet/>
+    
       <Hero/>
       <About/>
       <Feature/>
