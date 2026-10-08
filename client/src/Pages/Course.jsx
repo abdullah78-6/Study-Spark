@@ -26,7 +26,7 @@ const Course = ({url}) => {
   },[])
   const navigate=useNavigate();
   const detailcourse=useSelector(state=>state.main.detailcourse);
-  const Detailsredirect=(name,image,id,modules,description,urls,demo)=>{
+  const Detailsredirect=(name,image,id,modules,description,urls,demo,outcome,feature)=>{
     dispatch(control.setdetailcourse({
       name:name,
       image:image,
@@ -34,7 +34,9 @@ const Course = ({url}) => {
       modules:modules,
       description:description,
       urls:urls,
-      demo:demo
+      demo:demo,
+      outcome:outcome,
+      feature:feature
     }))
     navigate("/course_details");
 
@@ -49,7 +51,7 @@ const Course = ({url}) => {
           <img className='w-20' src={i.image_address} alt={i.name}/>
           <h1>CourseName:{i.name}</h1>
           <h1>TotalModules:{i.module}</h1>
-          <button onClick={()=>Detailsredirect(i.name,i.image_address,i._id,i.module,i.description,i.urls,i.demo)}>Details</button>
+          <button onClick={()=>Detailsredirect(i.name,i.image_address,i._id,i.module,i.description,i.urls,i.demo,i.outcome,i.feature)}>Details</button>
           </div>
 
         </div>

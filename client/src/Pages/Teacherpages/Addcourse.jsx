@@ -28,6 +28,7 @@ const handlerurlchange=(index,value)=>{
     newurl[index]=value;
     return newurl
   })
+  
  }
  const Handlesetmodules=()=>{
     const modulecount=Number(Coursedata.module);
@@ -65,7 +66,10 @@ const handlerurlchange=(index,value)=>{
     formdata.append("description",Coursedata.description);
     formdata.append("demo",Coursedata.demo);
     formdata.append("image",image)
+    formdata.append("outcome",Coursedata.outcome);
+    formdata.append("feature",Coursedata.feature);
     formdata.append("urls",JSON.stringify(urls));
+    console.log(Coursedata);
     dispatch(control.setcourseloading(true));
     try {
       dispatch(control.setcourseloading(true));
@@ -185,6 +189,33 @@ const handlerurlchange=(index,value)=>{
               className={`${inputClass} resize-none`}
             />
           </div>
+                    <div>
+            <label htmlFor='outcome' className={labelClass}>Course Outcome</label>
+            <textarea
+              onChange={Onchangehandler}
+              name="outcome"
+              value={Coursedata.outcome}
+              id="outcome"
+              required
+              rows={4}
+              placeholder='What is the outcome of this course?'
+              className={`${inputClass} resize-none`}
+            />
+          </div>
+          <div>
+            <label htmlFor='feature' className={labelClass}>Course Features</label>
+            <textarea
+              onChange={Onchangehandler}
+              name="feature"
+              value={Coursedata.feature}
+              id="feature"
+              required
+              rows={4}
+              placeholder='Describe Course Features'
+              className={`${inputClass} resize-none`}
+            />
+          </div>
+
             <div>
             <label htmlFor='demo' className={labelClass}>Intro Video URL</label>
             <input

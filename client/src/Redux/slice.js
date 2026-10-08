@@ -18,7 +18,9 @@ const clientslice=createSlice({
             name:"",
             description:"",
             module:"",
-            demo:""
+            demo:"",
+            outcome:"",
+            feature:""
 
         },
         Notesdata:{
@@ -64,7 +66,9 @@ const clientslice=createSlice({
             modules:null,
             description:null,
             urls:[],
-            demo:null
+            demo:null,
+            outcome:null,
+            feature:null
         }
 
         

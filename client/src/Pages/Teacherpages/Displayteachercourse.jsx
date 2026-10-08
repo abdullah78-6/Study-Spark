@@ -59,8 +59,8 @@ const Displayteachercourse = ({url}) => {
       {Totalteachercourses.map((i,index)=>{
         return <div>
           <img className='w-30' src={i.image_address} alt={i.name}/>
-          <h1>{i.name}</h1>
-          <h1>{i.module}</h1>
+          <h1>Course Name:{i.name}</h1>
+          <h1>Total Modules:{i.module}</h1>
           <button onClick={()=>DeleteCourse(i._id,i.Fileid)}>Delete Course</button>
         </div>
 

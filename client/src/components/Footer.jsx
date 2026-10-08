@@ -39,7 +39,7 @@ const Footer = () => {
     }
   return (
 <div>
-  {!bot&&<button onClick={()=>setbot(true)}>Chat message symbol</button>}
+  
   <AnimatePresence>
     {!bot&&(
       <motion.button
