@@ -25,6 +25,9 @@ const Couresedetail = ({url}) => {
         <h1>Description:{detailcourse.description}</h1>
         <h1>Outcome:{detailcourse.outcome}</h1>
         <h1>Feature:{detailcourse.feature}</h1>
+        <h1>Price:₹{detailcourse.price}</h1>
+        <h1>Tution Fee:₹{detailcourse.gst}</h1>
+        <h1>Total amount:₹{Number(detailcourse.gst)+Number(detailcourse.price)}</h1>
        
         <MediaController
         >

@@ -68,6 +68,8 @@ const handlerurlchange=(index,value)=>{
     formdata.append("image",image)
     formdata.append("outcome",Coursedata.outcome);
     formdata.append("feature",Coursedata.feature);
+    formdata.append("gst",Coursedata.gst);
+    formdata.append("price",Coursedata.price);
     formdata.append("urls",JSON.stringify(urls));
     console.log(Coursedata);
     dispatch(control.setcourseloading(true));
@@ -229,6 +231,35 @@ const handlerurlchange=(index,value)=>{
               className={`${inputClass} resize-none`}
             />
           </div>
+                 <div>
+            <label htmlFor='price' className={labelClass}>Course Price</label>
+            <input
+              onChange={Onchangehandler}
+              name="price"
+              value={Coursedata.price}
+              id="price"
+              required
+              type="number"
+              placeholder='₹ Course Price'
+              className={`${inputClass} resize-none`}
+            />
+          </div>
+ 
+        <div>
+            <label htmlFor='gst' className={labelClass}>Tution Fee</label>
+            <input
+              onChange={Onchangehandler}
+              name="gst"
+              value={Coursedata.gst}
+              id="gst"
+              
+              type="number"
+              placeholder='Tution Fee'
+              className={`${inputClass} resize-none`}
+            />
+          </div>
+ 
+ 
  
  
           {/* Modules */}

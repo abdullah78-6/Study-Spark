@@ -2,9 +2,39 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {FaGraduationCap,FaLinkedinIn,FaArrowUp,FaComments, FaTimes, FaPaperPlane,} from "react-icons/fa";
 import { AnimatePresence, motion } from "framer-motion";
-const Footer = () => {
+import axios from "axios"
+import {toast} from "react-hot-toast"
+const Footer = ({url}) => {
   const [bot,setbot]=useState(false);
   const Chatui=()=>{
+  const [input,setinput]=useState();
+  const[res,setres]=useState("");
+  const Submitbot=async(e)=>{
+    e.preventDefault()
+    if(!input?.trim()){
+      toast.error("Please Write Prompt");
+      return ;
+    }
+    try {
+    const res=await axios.post(url+"/api/ai/send",{input:input.trim()},{
+        
+          withCredentials:true
+        
+      })
+      if(res.data.status){
+        setres(res.data.result);
+      }
+      else{
+        toast.error(res.data.message||"Unable to get an answer")
+      }
+    } catch (error) {
+      console.log("bot error",error);
+      toast.error(
+    error.response?.data?.message || "Unable to connect to the AI server"
+  );
+    }
+
+  }
       return ( <motion.div initial={{ opacity: 0, scale: 0.8, y: 30 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.8, y: 30 }} transition={{ duration: 0.25, ease: "easeOut", }} className="fixed bottom-24 right-5 z-50 w-[calc(100%-2.5rem)] max-w-sm overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 shadow-2xl shadow-blue-950/40 sm:right-7" >
          
          <div className="flex items-center justify-between bg-blue-600 px-4 py-4"> 
@@ -24,11 +54,14 @@ const Footer = () => {
                  
                   <div className="flex h-72 flex-col bg-slate-900"> 
                     <div className="flex-1 overflow-y-auto p-4"> 
-                      <motion.div initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 }} className="max-w-[85%] rounded-2xl rounded-tl-sm bg-slate-800 px-4 py-3 text-sm text-slate-200 shadow-sm" > Hey 👋 <br /> How can I help you with Study·Spark? </motion.div> 
+                      <motion.div initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.15 }} className="max-w-[85%] rounded-2xl rounded-tl-sm bg-slate-800 px-4 py-3 text-sm text-slate-200 shadow-sm" >
+                    {res?res:<p> Hey 👋 <br /> 
+                         How can I help you with Study·Spark ?</p>}   </motion.div> 
                       </div>
                  
-                        <form onSubmit={(e) => e.preventDefault()} className="border-t border-slate-800 bg-slate-950 p-3" > 
-                          <div className="flex items-center gap-2"> <input type="text" placeholder="Need help?" className="min-w-0 flex-1 rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20" /> 
+                        <form onSubmit={Submitbot}  className="border-t border-slate-800 bg-slate-950 p-3" > 
+                          <div className="flex items-center gap-2"> 
+                            <input type="text"onChange={(e)=>setinput(e.target.value)}  placeholder="Need help?" className="min-w-0 flex-1 rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20" /> 
                           <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.9 }} type="submit" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-950/30 transition hover:bg-blue-500" aria-label="Send message" > <FaPaperPlane className="text-sm" />
                            </motion.button>
                             </div> 
@@ -39,7 +72,7 @@ const Footer = () => {
     }
   return (
 <div>
-  
+
   <AnimatePresence>
     {!bot&&(
       <motion.button

@@ -20,7 +20,9 @@ const clientslice=createSlice({
             module:"",
             demo:"",
             outcome:"",
-            feature:""
+            feature:"",
+            gst:"",
+            price:""
 
         },
         Notesdata:{
@@ -68,7 +70,9 @@ const clientslice=createSlice({
             urls:[],
             demo:null,
             outcome:null,
-            feature:null
+            feature:null,
+            gst:null,
+            price:null
         }
 
         

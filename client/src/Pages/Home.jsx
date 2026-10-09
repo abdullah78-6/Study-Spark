@@ -43,7 +43,7 @@ return (
       <About/>
       <Feature/>
       <Content/>
-      <Footer/>
+      <Footer url={url}/>
      
       
     </div>

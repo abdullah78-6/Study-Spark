@@ -8,7 +8,9 @@ const Courseschema=new mongoose.Schema({
     urls:{type:Array,require:true},
     demo:{type:String,require:true},
     outcome:{type:String,require:true},
-    feature:{type:String,require:true}
+    feature:{type:String,require:true},
+    gst:{type:String,default:"40"},
+    price:{type:String,require:true}
 });
 const Quizschema=new mongoose.Schema({
     questions:{type:Array,require:true},
