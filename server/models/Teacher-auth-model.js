@@ -10,7 +10,8 @@ const Courseschema=new mongoose.Schema({
     outcome:{type:String,require:true},
     feature:{type:String,require:true},
     gst:{type:String,default:"40"},
-    price:{type:String,require:true}
+    price:{type:String,require:true},
+    payment_status:{type:Boolean,default:false}
 });
 const Quizschema=new mongoose.Schema({
     questions:{type:Array,require:true},
@@ -44,7 +45,7 @@ const Teacherschema=new mongoose.Schema({
     Course_upload:{type:[Courseschema],default:[]},
     Quiz_upload:{type:[Quizschema],default:[]},
     Notes_upload:{type:[Notesschema],default:[]},
-    PYQ_upload:{type:[pyqschema],default:[]}
+    PYQ_upload:{type:[pyqschema],default:[]},
 },{minimize:false})
 const Teachermodel=mongoose.model("Teacher-model",Teacherschema);
 const Coursemodel=mongoose.model("Course-Model",Courseschema);

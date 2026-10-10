@@ -1,5 +1,6 @@
 import Feedbackmodel from "../models/Feed-back-model.js"
 import {Resend} from "resend"
+import { Teachermodel } from "../models/Teacher-auth-model.js";
 const resend=new Resend(process.env.RESEND_APIKEY);
 const Addfeedback=async(req,res)=>{
     try {
@@ -11,7 +12,8 @@ const Addfeedback=async(req,res)=>{
             name:name,
             email:email,
             subject:subject,
-            message:message
+            message:message,
+            readBy:[],
 
         });
         await newschema.save();
@@ -306,6 +308,7 @@ const Addfeedback=async(req,res)=>{
 });
 console.log("email send sucesfully ",data);
 return res.json({status:true,message:"Thanks For Feedback"});
+
         
     } catch (error) {
         console.log("Add feedback error",error);
@@ -315,7 +318,7 @@ return res.json({status:true,message:"Thanks For Feedback"});
 }
 const Getfeedback=async(req,res)=>{
     try {
-        const feedback=await Feedbackmodel.find({});
+        const feedback=await Feedbackmodel.find({}).sort({createdAt:-1}).lean();
         return res.json({status:true,result:feedback});
     } catch (error) {
         console.log("get feedback error",error);
@@ -328,10 +331,10 @@ const DeleteFeedback=async(req,res)=>{
         const {_id}=req.body;
         const feedback=await Feedbackmodel.findByIdAndDelete({_id:_id});
         if(feedback){
-            return res.json({status:true,message:"Feedback Removed Sucessfully"});
+        return res.json({status:true,message:"Feedback Removed Sucessfully"});
         }
         else{
-        return res.json({status:false,message:"Server Issue"});
+        return res.json({status:false,message:"Feedback not found"});
         }
 
     } catch (error) {
@@ -340,5 +343,30 @@ const DeleteFeedback=async(req,res)=>{
     
 
 }
-export {Addfeedback,Getfeedback,DeleteFeedback}
+const Checkfedback=async(req,res)=>{//teacher_homepage
+    try {
+        const teacherid=req.user.id;
+        const unreadcount=await Feedbackmodel.countDocuments({
+            readBy:{$ne:teacherid},
+        })
+        return res.json({status:true,noti:unreadcount>0,unreadcount})
+    } catch (error) {
+        console.log("update feedback error",error);
+    }
+
+}
+const Updatefeedback=async(req,res)=>{//feedbackpage
+    try {
+        const teacherid=req.user.id;
+        await Feedbackmodel.updateMany(
+            {readBy:{$ne:teacherid}},
+            {$addToSet:{readBy:teacherid}}
+        );
+        return res.json({status:true,noti:false,message:"Notification marked as read"});
+    } catch (error) {
+        console.log("update feedback error",error);
+    }
+
+}
+export {Addfeedback,Getfeedback,DeleteFeedback,Checkfedback,Updatefeedback}
 

@@ -113,4 +113,20 @@ const Getcourse_teacher=async(req,res)=>{
     }
 
 }
-export {Addcourse,Deletecourse,Getcourse,Getcourse_teacher}
+const Enroolement_payment=async(req,res)=>{
+    try {
+        const {_id}=req.body;
+        console.log("fromfrontend ",_id)
+    } catch (error) {
+        console.log("Enroolement payment error",error);
+    }
+}
+const Payment_verifivation=async(req,res)=>{
+    try {
+        
+    } catch (error) {
+        console.log("payment verification error",error);
+    }
+
+}
+export {Addcourse,Deletecourse,Getcourse,Getcourse_teacher,Enroolement_payment,Payment_verifivation}

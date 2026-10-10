@@ -106,7 +106,7 @@ return (
               : "text-slate-600 hover:bg-blue-50 hover:text-blue-600"
           }`}
         >
-          Contact-us
+          Feedback
         </Link>
          <Link to="/Notes"
           onClick={() => dispatch(control.setnavclass("Notes"))}
@@ -200,7 +200,7 @@ return (
               : "text-slate-600 hover:bg-blue-50 hover:text-blue-600"
           }`}
         >
-          Contact-us
+        Feedback
         </Link>
         <Link to="/Notes"
           onClick={() => dispatch(control.setnavclass("Notes"))}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import {useDispatch,useSelector} from "react-redux"
 import { FaBell } from "react-icons/fa";
@@ -7,7 +7,7 @@ import {Link} from "react-router-dom"
 const Teacher_Navbar = () => {
   const dispatch=useDispatch();
   const backendemail2=useSelector(state=>state.main.backendemail2)
-
+  const noti=useSelector(state=>state.main.noti)
   return (
     <div className='bg-gradient-to-r from-white via-sky-50 to-white shadow-md px-4 sm:px-8 py-3.5 sticky top-0 z-50 border-b border-sky-100 backdrop-blur-sm'>
       <div className='flex justify-between items-center'>
@@ -23,10 +23,10 @@ const Teacher_Navbar = () => {
 
         <ul className='flex justify-end items-center gap-3 sm:gap-5'>
 
-          <li className='relative cursor-pointer w-9 h-9 flex items-center justify-center rounded-full text-slate-500 hover:text-sky-500 hover:bg-sky-50 transition-all duration-200'>
-            <FaBell size={17} />
-            <span className='absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white'></span>
-          </li>
+          <Link to="/teacher_page/feedback" className='relative cursor-pointer w-9 h-9 flex items-center justify-center rounded-full text-slate-500 hover:text-sky-500 hover:bg-sky-50 transition-all duration-200'>
+            <FaBell onClick={()=>dispatch(control.setsidemenu("ten"))} size={17} />
+            {noti&&<span className='absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white'></span>}
+          </Link>
 
           <span className='h-7 w-px bg-sky-100 hidden sm:block'></span>
 

@@ -151,7 +151,7 @@ const Contact = ({ url }) => {
                         </motion.div>
 
                         <h1 className="mb-4 text-3xl font-bold text-gray-800 md:text-5xl">
-                            Contact Study<span className="text-blue-600">·</span>Spark
+                           Send Feedback To Study<span className="text-blue-600">·</span>Spark
                         </h1>
 
                         <p className="mx-auto max-w-2xl leading-7 text-gray-500">

@@ -47,6 +47,21 @@ const DeleteFeedback=async(_id)=>{
     
   }
 }
+const Notification_update=async()=>{
+  try {
+    const res=await axios.get(url+"/api/feedback/update_feedback",{
+      withCredentials:true
+    });
+    if(res.data.status){
+      dispatch(control.setnoti(res.data.noti));
+    }
+  } catch (error) {
+    console.log("notification update error",error);
+  }
+}
+useEffect(()=>{
+  Notification_update();
+},[]);
   return (
     <div className="min-h-screen bg-slate-50 px-4 py-8 md:px-8 lg:px-10">
 

@@ -31,6 +31,28 @@ const Teacher_Homepage = ({url}) => {
 
     },[])
     
+    useEffect(()=>{
+      let active=true;
+      const Notification_trigger=async()=>{
+      try {
+        const res=await axios.get(url+"/api/feedback/chk_feedback",{
+          withCredentials:true
+        })
+        if(active&&res.data.status){
+          dispatch(control.setnoti(res.data.noti));
+        }
+      } catch (error) {
+        console.log("notification trigger error",error);
+      }
+
+    };
+    Notification_trigger();
+    const intervalid=setInterval(Notification_trigger,30000);
+    return ()=>{active=false;
+      clearInterval(intervalid);
+    };
+    },[url,dispatch])
+    
   return (
     <div className='min-h-screen bg-sky-50/50'>
         <Teacher_Navbar url={url}/>

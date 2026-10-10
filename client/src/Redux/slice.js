@@ -73,7 +73,8 @@ const clientslice=createSlice({
             feature:null,
             gst:null,
             price:null
-        }
+        },
+        noti:false
 
         
         
@@ -82,6 +83,9 @@ reducers:{
     setLogindata(state,action){
         const {name,value}=action.payload;
         state.Logindata[name]=value;
+    },
+    setnoti(state,action){
+        state.noti=action.payload;
     },
     setdetailcourse(state,action){
         state.detailcourse=action.payload;
