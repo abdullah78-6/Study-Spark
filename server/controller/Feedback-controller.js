@@ -1,4 +1,3 @@
-import Feedbackmodel from "../models/Feed-back-model.js"
 import {Resend} from "resend"
 import { Teachermodel } from "../models/Teacher-auth-model.js";
 const resend=new Resend(process.env.RESEND_APIKEY);
@@ -8,15 +7,22 @@ const Addfeedback=async(req,res)=>{
         if(!name||!email||!subject||!message){
             return res.json({status:false,message:"All Fields Are Required"});
         }
-        const newschema=new Feedbackmodel({
-            name:name,
-            email:email,
-            subject:subject,
-            message:message,
-            readBy:[],
-
-        });
-        await newschema.save();
+        const result=await Teachermodel.updateMany(
+            {},
+            {$push:{
+                Feedback:{
+                    name:name.trim(),
+                    email:email.trim(),
+                    subject:subject.trim(),
+                    message:message.trim(),
+                    readBy:[]
+                },
+            },
+        }
+        );
+        if(result.matchedCount===0){
+            return res.json({status:false,message:"No teachers found"});
+        }
         const data = await resend.emails.send({
          from: "onboarding@resend.dev",
         to: "abdullahqidwai49@gmail.com",
@@ -318,7 +324,14 @@ return res.json({status:true,message:"Thanks For Feedback"});
 }
 const Getfeedback=async(req,res)=>{
     try {
-        const feedback=await Feedbackmodel.find({}).sort({createdAt:-1}).lean();
+        const teacher=await Teachermodel.findById(req.user.id).lean();
+        if(!teacher){
+            return res.json({status:false,message:"Teacher not found"});
+        }
+        const feedback=(teacher.Feedback||[]).sort(
+            (a,b)=>new Date(b.createdAt||0)-
+                   new Date(a.createdAt||0)
+        );
         return res.json({status:true,result:feedback});
     } catch (error) {
         console.log("get feedback error",error);
@@ -329,12 +342,27 @@ const Getfeedback=async(req,res)=>{
 const DeleteFeedback=async(req,res)=>{
     try {
         const {_id}=req.body;
-        const feedback=await Feedbackmodel.findByIdAndDelete({_id:_id});
-        if(feedback){
-        return res.json({status:true,message:"Feedback Removed Sucessfully"});
+        if(!_id){
+            return res.json({status:false,message:"Feedback id is required"});
+        }
+        const teacher=await Teachermodel.findOneAndUpdate(
+            {
+                _id:req.user.id,
+                "Feedback._id":_id,
+            },
+            {
+                $pull:{
+                    Feedback:{_id:_id},
+                },
+            },
+            {new:true}
+        );
+        
+        if(!teacher){
+        return res.json({status:false,message:"Feedback not found"});
         }
         else{
-        return res.json({status:false,message:"Feedback not found"});
+        return res.json({status:true,message:"Feedback Removed Successfully"});
         }
 
     } catch (error) {
@@ -345,11 +373,18 @@ const DeleteFeedback=async(req,res)=>{
 }
 const Checkfedback=async(req,res)=>{//teacher_homepage
     try {
-        const teacherid=req.user.id;
-        const unreadcount=await Feedbackmodel.countDocuments({
-            readBy:{$ne:teacherid},
-        })
-        return res.json({status:true,noti:unreadcount>0,unreadcount})
+      const teacher=await Teachermodel.findById(req.user.id).select("Feedback");  
+      if(!teacher){
+        return res.json({status:false,message:"Teacher not found"});
+      }
+      const teacherid=req.user.id;
+      const unreadcount=teacher.Feedback.filter(
+        (feedback)=>
+            !feedback.readBy.some(
+                (id)=>id.toString()===teacherid.toString()
+            )
+      ).length;
+      return res.json({status:true,noti:unreadcount>0,unreadcount});
     } catch (error) {
         console.log("update feedback error",error);
     }
@@ -357,12 +392,22 @@ const Checkfedback=async(req,res)=>{//teacher_homepage
 }
 const Updatefeedback=async(req,res)=>{//feedbackpage
     try {
-        const teacherid=req.user.id;
-        await Feedbackmodel.updateMany(
-            {readBy:{$ne:teacherid}},
-            {$addToSet:{readBy:teacherid}}
-        );
-        return res.json({status:true,noti:false,message:"Notification marked as read"});
+     const teacher=await Teachermodel.findById(req.user.id);
+     if(!teacher){
+        return res.json({status:false,message:"Teacher not found"});
+     }
+     const teacherid=teacher._id;
+     teacher.Feedback.forEach((feedback)=>{
+        if(
+            !feedback.readBy.some(
+                (id)=>id.toString()===teacherid.toString()
+            )
+        ) {
+        feedback.readBy.push(teacherid);
+        }
+     });
+     await teacher.save();   
+     return res.json({status:true,noti:false,message:"Notification marked as read"});
     } catch (error) {
         console.log("update feedback error",error);
     }

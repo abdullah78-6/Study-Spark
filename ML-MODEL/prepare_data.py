@@ -2,13 +2,15 @@
 import json
 import os
 import re
+import ast
 from pathlib import Path
 
 import pandas as pd
 from dotenv import load_dotenv
 
+
 # --------------------------------------------------
-# Configuration
+# 1. Configuration
 # --------------------------------------------------
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -17,52 +19,66 @@ load_dotenv(BASE_DIR / ".env")
 DATASET_DIR = BASE_DIR / "dataset"
 OUTPUT_PATH = DATASET_DIR / "knowledge.json"
 
-DATASET_FILES = os.getenv(
-    "DATASET_FILES",
-    "dataset/prog_book.csv,dataset/Subject_Data.csv"
-).split(",")
+configured_files = os.getenv("DATASET_FILES", "").strip()
+
+if configured_files:
+    DATASET_FILES = [
+        item.strip()
+        for item in configured_files.split(",")
+        if item.strip()
+    ]
+else:
+    DATASET_FILES = [
+        str(path.relative_to(BASE_DIR))
+        for path in sorted(DATASET_DIR.iterdir())
+        if path.is_file()
+        and path.suffix.lower() in {".csv", ".txt"}
+        and path.name.lower() != "knowledge.json"
+    ]
+
 
 QUESTION_COLUMNS = [
     "question", "questions", "query", "prompt",
-    "problem", "question_text", "user_question"
+    "problem", "question_text", "user_question",
+    "instruction", "utterance", "input", "user_input"
 ]
 
 ANSWER_COLUMNS = [
     "answer", "answers", "response", "solution",
-    "explanation", "answer_text", "correct_answer"
+    "explanation", "answer_text", "correct_answer",
+    "output", "assistant_response", "completion",
+    "target", "response_text"
+]
+
+CONTEXT_COLUMNS = [
+    "context", "passage", "paragraph", "article",
+    "background", "document", "source_text"
 ]
 
 TITLE_COLUMNS = [
-    "title", "titile", "book_title", "name",
-    "topic", "concept", "subject_name"
+    "title", "book_title", "name", "topic",
+    "concept", "subject_name", "heading"
 ]
 
 DESCRIPTION_COLUMNS = [
     "description", "content", "text", "summary",
-    "details", "definition", "abstract"
+    "details", "definition", "abstract", "body"
 ]
 
-SUBJECT_NAMES = [
-    "Physics",
-    "Chemistry",
-    "Mathematics",
-    "Biology",
-    "Computer Science"
-]
+MIN_QUESTION_LENGTH = 4
+MIN_ANSWER_LENGTH = 5
+MAX_QUESTION_LENGTH = 1000
+MAX_ANSWER_LENGTH = 1500
 
 
 # --------------------------------------------------
-# Helpers
+# 2. Helper functions
 # --------------------------------------------------
 
 def normalize_column(column):
-    return (
-        str(column)
-        .strip()
-        .lower()
-        .replace(" ", "_")
-        .replace("-", "_")
-    )
+    column = str(column).strip().lower()
+    column = re.sub(r"[^a-z0-9]+", "_", column)
+    return column.strip("_")
 
 
 def find_column(columns, candidates):
@@ -72,121 +88,232 @@ def find_column(columns, candidates):
     }
 
     for candidate in candidates:
-        if candidate in normalized:
-            return normalized[candidate]
+        key = normalize_column(candidate)
+
+        if key in normalized:
+            return normalized[key]
 
     return None
 
 
 def clean_value(value):
-    if pd.isna(value):
+    if value is None:
         return ""
 
-    return re.sub(r"\s+", " ", str(value)).strip()
+    try:
+        if pd.isna(value):
+            return ""
+    except (TypeError, ValueError):
+        pass
+
+    text = str(value)
+    text = text.replace("\x00", "")
+    text = re.sub(r"\s+", " ", text).strip()
+
+    if text.lower() in {"nan", "none", "null", "n/a"}:
+        return ""
+
+    return text
 
 
-def read_csv_safely(file_path):
-    for encoding in ("utf-8", "utf-8-sig", "cp1252", "latin1"):
+def parse_nested_answer(value):
+    """
+    Extract answers from plain strings, lists, or nested JSON.
+
+    Example:
+    {"text": ["Inheritance allows one class to reuse another class."]}
+
+    Returns an empty string if no usable answer is available.
+    """
+
+    value = clean_value(value)
+
+    if not value:
+        return ""
+
+    try:
+        parsed = json.loads(value)
+    except (json.JSONDecodeError, TypeError):
         try:
-            df = pd.read_csv(
-                file_path,
-                encoding=encoding,
-                low_memory=False
-            )
-            print(f"Encoding used: {encoding}")
-            return df
-        except UnicodeDecodeError:
-            continue
+            parsed = ast.literal_eval(value)
+        except (ValueError, SyntaxError, TypeError):
+            return value
 
-    raise ValueError(f"Unable to decode {file_path.name}")
+    if isinstance(parsed, str):
+        return clean_value(parsed)
+
+    if isinstance(parsed, list):
+        answers = []
+
+        for item in parsed:
+            answer = parse_nested_answer(item)
+
+            if answer:
+                answers.append(answer)
+
+        return " ".join(answers[:3])
+
+    if isinstance(parsed, dict):
+        # Common SQuAD / Hugging Face answer structures.
+        for key in ("text", "answer", "answers", "value"):
+            if key in parsed:
+                answer = parse_nested_answer(parsed[key])
+
+                if answer:
+                    return answer
+
+    return ""
 
 
-def detect_subject(row, columns):
-    """Detect subject labels stored as indicator columns."""
+def detect_subject(row, columns, source_name):
+    """Detect a subject from dataset columns or the filename."""
 
     normalized_columns = {
         normalize_column(column): column
         for column in columns
     }
 
-    subjects = []
+    for name in ("subject", "category", "domain", "topic", "course"):
+        column = normalized_columns.get(name)
 
-    for subject_name in SUBJECT_NAMES:
-        key = normalize_column(subject_name)
-        column = normalized_columns.get(key)
+        if column:
+            value = clean_value(row[column])
 
-        if column is None:
-            continue
+            if value and len(value) < 100:
+                return value
 
-        value = clean_value(row[column]).lower()
+    subject_indicators = {
+        "physics": "Physics",
+        "chemistry": "Chemistry",
+        "mathematics": "Mathematics",
+        "biology": "Biology",
+        "computer_science": "Computer Science",
+        "programming": "Programming",
+        "general_knowledge": "General Knowledge",
+    }
 
-        # Support common binary indicator values.
-        if value in {"1", "1.0", "true", "yes", "y"}:
-            subjects.append(subject_name)
+    for column_name, subject in subject_indicators.items():
+        column = normalized_columns.get(column_name)
 
-    return ", ".join(subjects)
+        if column:
+            value = clean_value(row[column]).lower()
+
+            if value in {"1", "1.0", "true", "yes", "y"}:
+                return subject
+
+    filename = source_name.lower()
+
+    if any(word in filename for word in (
+        "physics", "jee", "neet", "squad", "science_exam"
+    )):
+        return "Science"
+
+    if any(word in filename for word in ("biology", "bio")):
+        return "Biology"
+
+    if any(word in filename for word in ("chemistry", "chemical")):
+        return "Chemistry"
+
+    if any(word in filename for word in (
+        "math", "algebra", "calculus"
+    )):
+        return "Mathematics"
+
+    if any(word in filename for word in (
+        "prog", "python", "code", "stack", "computer",
+        "programming", "interview"
+    )):
+        return "Computer Science"
+
+    if any(word in filename for word in (
+        "human_chat", "conversation", "utterance",
+        "dialogue", "dialog"
+    )):
+        return "Conversation"
+
+    return "General"
 
 
-def split_into_sentences(text):
-    """Split text into sentence-like pieces."""
+def short_answer(text):
+    """Clean and limit answer length without unnecessarily shortening it."""
 
-    text = re.sub(r"\s+", " ", text).strip()
+    text = clean_value(text)
 
-    if not text:
-        return []
+    if len(text) <= MAX_ANSWER_LENGTH:
+        return text
 
-    # Protect common abbreviations and decimal numbers.
-    text = re.sub(r"(?<=\d)\.(?=\d)", "<DOT>", text)
+    truncated = text[:MAX_ANSWER_LENGTH]
 
-    parts = re.split(r"(?<=[.!?])\s+", text)
-    parts = [
-        part.replace("<DOT>", ".").strip()
-        for part in parts
-    ]
+    sentence_end = max(
+        truncated.rfind(". "),
+        truncated.rfind("? "),
+        truncated.rfind("! ")
+    )
 
-    return [part for part in parts if part]
+    if sentence_end >= MAX_ANSWER_LENGTH // 2:
+        truncated = truncated[:sentence_end + 1]
+    else:
+        truncated = truncated.rsplit(" ", 1)[0]
 
-
-def short_answer(text, max_sentences=2, max_chars=450):
-    """
-    Produce a concise extractive answer.
-    This selects existing sentences; it does not invent facts.
-    """
-
-    text = re.sub(r"\s+", " ", text).strip()
-    sentences = split_into_sentences(text)
-
-    if not sentences:
-        return text[:max_chars].strip()
-
-    result = " ".join(sentences[:max_sentences])
-
-    if len(result) > max_chars:
-        result = result[:max_chars].rsplit(" ", 1)[0].rstrip(" ,;:")
-
-        if result and result[-1] not in ".!?":
-            result += "..."
-
-    return result
+    return truncated.strip()
 
 
 def make_record(question, answer, subject, source):
-    question = question.strip()
+    question = clean_value(question)
     answer = short_answer(answer)
 
-    if not question or not answer:
+    if len(question) < MIN_QUESTION_LENGTH:
+        return None
+
+    if len(answer) < MIN_ANSWER_LENGTH:
+        return None
+
+    if len(question) > MAX_QUESTION_LENGTH:
+        question = question[:MAX_QUESTION_LENGTH].rstrip()
+
+    if question.lower() in {
+        "question", "questions", "input", "prompt",
+        "user", "human", "assistant"
+    }:
         return None
 
     return {
         "question": question,
         "answer": answer,
-        "subject": subject,
+        "subject": clean_value(subject) or "General",
         "source": source
     }
 
 
 # --------------------------------------------------
-# Process one CSV
+# 3. Read CSV safely
+# --------------------------------------------------
+
+def read_csv_safely(file_path):
+    last_error = None
+
+    for encoding in ("utf-8", "utf-8-sig", "cp1252", "latin1"):
+        try:
+            df = pd.read_csv(
+                file_path,
+                encoding=encoding,
+                low_memory=False,
+                on_bad_lines="skip"
+            )
+
+            print(f"Encoding used: {encoding}")
+            return df
+
+        except Exception as error:
+            last_error = error
+
+    raise ValueError(
+        f"Unable to read {file_path.name}: {last_error}"
+    )
+
+
+# --------------------------------------------------
+# 4. Process CSV datasets
 # --------------------------------------------------
 
 def process_csv(file_path):
@@ -194,7 +321,7 @@ def process_csv(file_path):
         print(f"WARNING: File not found: {file_path}")
         return []
 
-    print(f"\nReading: {file_path.name}")
+    print(f"\nReading CSV: {file_path.name}")
 
     try:
         df = read_csv_safely(file_path)
@@ -202,41 +329,82 @@ def process_csv(file_path):
         print(f"ERROR: {error}")
         return []
 
-    df.columns = [str(column).strip() for column in df.columns]
+    if df.empty:
+        print("Skipped: CSV contains no usable rows.")
+        return []
 
-    print(f"Columns: {list(df.columns)}")
+    df.columns = [
+        str(column).strip()
+        for column in df.columns
+    ]
+
     print(f"Rows: {len(df)}")
+    print(f"Columns: {list(df.columns)}")
 
-    question_col = find_column(df.columns, QUESTION_COLUMNS)
-    answer_col = find_column(df.columns, ANSWER_COLUMNS)
-    title_col = find_column(df.columns, TITLE_COLUMNS)
-    description_col = find_column(df.columns, DESCRIPTION_COLUMNS)
+    question_col = find_column(
+        df.columns, QUESTION_COLUMNS
+    )
+
+    answer_col = find_column(
+        df.columns, ANSWER_COLUMNS
+    )
+
+    context_col = find_column(
+        df.columns, CONTEXT_COLUMNS
+    )
+
+    title_col = find_column(
+        df.columns, TITLE_COLUMNS
+    )
+
+    description_col = find_column(
+        df.columns, DESCRIPTION_COLUMNS
+    )
 
     records = []
 
     for _, row in df.iterrows():
-        values = {
-            column: clean_value(row[column])
-            for column in df.columns
-            if clean_value(row[column])
-        }
+        subject = detect_subject(
+            row,
+            df.columns,
+            file_path.name
+        )
 
-        if not values:
-            continue
+        question = (
+            clean_value(row[question_col])
+            if question_col else ""
+        )
 
-        subject = detect_subject(row, df.columns)
+        answer = (
+            parse_nested_answer(row[answer_col])
+            if answer_col else ""
+        )
 
-        # Case 1: A proper question-answer dataset.
-        if (
-            question_col
-            and answer_col
-            and question_col != answer_col
-        ):
-            question = values.get(question_col, "")
-            answer = values.get(answer_col, "")
+        context = (
+            clean_value(row[context_col])
+            if context_col else ""
+        )
 
+        title = (
+            clean_value(row[title_col])
+            if title_col else ""
+        )
+
+        description = (
+            clean_value(row[description_col])
+            if description_col else ""
+        )
+
+        # ------------------------------------------
+        # Case 1: A real question and answer exist.
+        # ------------------------------------------
+
+        if question and answer:
             record = make_record(
-                question, answer, subject, file_path.name
+                question,
+                answer,
+                subject,
+                file_path.name
             )
 
             if record:
@@ -244,20 +412,25 @@ def process_csv(file_path):
 
             continue
 
-        # Case 2: Educational passage dataset.
-        title = values.get(title_col, "") if title_col else ""
-        content = (
-            values.get(description_col, "")
-            if description_col
-            else ""
-        )
+        # ------------------------------------------
+        # Case 2: A question exists, but the answer
+        # is missing. Do not return the full context
+        # as though it were the answer.
+        # ------------------------------------------
 
-        if content:
-            # Create a general question for the passage.
-            topic = title or subject or "this topic"
+        if question and context:
+            continue
 
+        # ------------------------------------------
+        # Case 3: Educational content with a title
+        # and actual description.
+        # ------------------------------------------
+
+        content = description or context
+
+        if title and content:
             record = make_record(
-                f"Explain {topic}",
+                f"What is {title}?",
                 content,
                 subject,
                 file_path.name
@@ -266,87 +439,29 @@ def process_csv(file_path):
             if record:
                 records.append(record)
 
-            # Create additional questions from topic headings
-            # found inside longer passages.
-            headings = [
-                "What is Work?",
-                "What is Energy?",
-                "Kinetic Energy:",
-                "Translational Kinetic Energy:",
-                "Rotational Kinetic Energy:",
-                "Work-Energy Theorem",
-                "Power",
-                "Units of Power"
-            ]
-
-            for heading in headings:
-                heading_text = heading.rstrip(":")
-                pattern = re.compile(
-                    re.escape(heading_text),
-                    re.IGNORECASE
-                )
-
-                match = pattern.search(content)
-
-                if not match:
-                    continue
-
-                start = match.start()
-                next_heading_positions = [
-                    found.start()
-                    for other in headings
-                    if other.lower() != heading.lower()
-                    for found in re.finditer(
-                        re.escape(other.rstrip(":")),
-                        content[start + len(heading_text):],
-                        re.IGNORECASE
-                    )
-                ]
-
-                if next_heading_positions:
-                    end = (
-                        start + len(heading_text)
-                        + min(next_heading_positions)
-                    )
-                    section = content[start:end]
-                else:
-                    section = content[start:]
-
-                section = section.strip(" .:\n")
-
-                if len(section) < 25:
-                    continue
-
-                record = make_record(
-                    f"What is {heading_text.lower()}?",
-                    section,
-                    subject,
-                    file_path.name
-                )
-
-                if record:
-                    records.append(record)
-
-        elif title:
-            # Case 3: Book catalogue.
-            description = values.get(
-                find_column(df.columns, ["description"]), ""
+            record = make_record(
+                f"Explain {title}.",
+                content,
+                subject,
+                file_path.name
             )
 
-            book_title = title
+            if record:
+                records.append(record)
 
-            if description:
-                answer = description
-            else:
-                answer = (
-                    f"{book_title} is a book listed in the "
-                    f"programming book dataset."
-                )
+            continue
 
+        # ------------------------------------------
+        # Case 4: Content with no explicit question.
+        # Generate a topic question only if the title
+        # provides a meaningful topic.
+        # ------------------------------------------
+
+        if content and title:
             record = make_record(
-                f"What is {book_title} about?",
-                answer,
-                subject or "Computer Science",
+                f"What is {title}?",
+                content,
+                subject,
                 file_path.name
             )
 
@@ -358,53 +473,173 @@ def process_csv(file_path):
 
 
 # --------------------------------------------------
-# Prepare combined knowledge base
+# 5. Process TXT conversation datasets
+# --------------------------------------------------
+
+def process_txt(file_path):
+    if not file_path.exists():
+        print(f"WARNING: File not found: {file_path}")
+        return []
+
+    print(f"\nReading text: {file_path.name}")
+
+    text = ""
+
+    for encoding in ("utf-8", "utf-8-sig", "cp1252", "latin1"):
+        try:
+            text = file_path.read_text(encoding=encoding)
+            break
+        except UnicodeDecodeError:
+            continue
+
+    if not text.strip():
+        print("Skipped: Text file is empty.")
+        return []
+
+    records = []
+    lines = [
+        line.strip()
+        for line in text.splitlines()
+        if line.strip()
+    ]
+
+    # Handle labelled dialogue:
+    # Human: Hello
+    # Assistant: Hi there
+
+    user_labels = {
+        "human", "user", "person 1", "speaker 1"
+    }
+
+    assistant_labels = {
+        "assistant", "bot", "person 2", "speaker 2"
+    }
+
+    labelled_lines = []
+
+    for line in lines:
+        match = re.match(
+            r"^(human|user|person\s*1|speaker\s*1|"
+            r"assistant|bot|person\s*2|speaker\s*2)"
+            r"\s*:\s*(.+)$",
+            line,
+            flags=re.IGNORECASE
+        )
+
+        if match:
+            speaker = re.sub(
+                r"\s+", " ", match.group(1).lower()
+            )
+            message = clean_value(match.group(2))
+            labelled_lines.append((speaker, message))
+
+    if labelled_lines:
+        pending_question = ""
+
+        for speaker, message in labelled_lines:
+            if speaker in user_labels:
+                pending_question = message
+
+            elif speaker in assistant_labels and pending_question:
+                record = make_record(
+                    pending_question,
+                    message,
+                    "Conversation",
+                    file_path.name
+                )
+
+                if record:
+                    records.append(record)
+
+                pending_question = ""
+
+    else:
+        # Only use alternating lines as a fallback for files
+        # that appear to contain conversation data.
+        filename = file_path.name.lower()
+
+        is_conversation_file = any(
+            word in filename
+            for word in (
+                "chat", "conversation", "dialog", "utterance"
+            )
+        )
+
+        if is_conversation_file:
+            for index in range(0, len(lines) - 1, 2):
+                record = make_record(
+                    lines[index],
+                    lines[index + 1],
+                    "Conversation",
+                    file_path.name
+                )
+
+                if record:
+                    records.append(record)
+
+    print(f"Generated conversation records: {len(records)}")
+    return records
+
+
+# --------------------------------------------------
+# 6. Prepare and combine the knowledge base
 # --------------------------------------------------
 
 def prepare_dataset():
     all_records = []
 
     for item in DATASET_FILES:
-        item = item.strip()
-
-        if not item:
-            continue
-
         file_path = Path(item)
 
         if not file_path.is_absolute():
             file_path = BASE_DIR / file_path
 
-        all_records.extend(process_csv(file_path))
+        suffix = file_path.suffix.lower()
+
+        if suffix == ".csv":
+            all_records.extend(process_csv(file_path))
+
+        elif suffix == ".txt":
+            all_records.extend(process_txt(file_path))
+
+        else:
+            print(f"Skipped unsupported file: {file_path.name}")
 
     if not all_records:
         raise ValueError(
-            "No usable records found. Check your dataset files."
+            "No question-answer records were generated. "
+            "Check dataset paths and column names."
         )
 
+    # Remove exact duplicate question-answer pairs.
+    # Preserve different answers to the same question.
     unique_records = []
     seen = set()
 
     for record in all_records:
-        question = record["question"].strip()
-        answer = record["answer"].strip()
+        question = clean_value(record["question"])
+        answer = clean_value(record["answer"])
 
-        key = question.casefold()
+        key = (
+            question.casefold(),
+            answer.casefold()
+        )
 
-        if not question or not answer or key in seen:
+        if key in seen:
             continue
 
         seen.add(key)
 
         unique_records.append({
-            **record,
             "question": question,
-            "answer": answer
+            "answer": answer,
+            "subject": record["subject"],
+            "source": record["source"]
         })
 
     DATASET_DIR.mkdir(parents=True, exist_ok=True)
 
-    with open(OUTPUT_PATH, "w", encoding="utf-8") as file:
+    with OUTPUT_PATH.open("w", encoding="utf-8") as file:
         json.dump(
             unique_records,
             file,
@@ -412,21 +647,40 @@ def prepare_dataset():
             indent=2
         )
 
-    print("\nDataset preparation completed.")
+    print("\n" + "=" * 45)
+    print("DATASET PREPARATION COMPLETED")
+    print("=" * 45)
     print(f"Total records: {len(unique_records)}")
     print(f"Saved to: {OUTPUT_PATH}")
 
     print("\nRecords by source:")
 
-    for source in sorted({
-        record["source"] for record in unique_records
-    }):
-        count = sum(
-            record["source"] == source
-            for record in unique_records
-        )
-        print(f"{source}: {count}")
+    source_counts = {}
 
+    for record in unique_records:
+        source = record["source"]
+        source_counts[source] = source_counts.get(source, 0) + 1
+
+    for source, count in sorted(source_counts.items()):
+        print(f"  {source}: {count}")
+
+    print("\nRecords by subject:")
+
+    subject_counts = {}
+
+    for record in unique_records:
+        subject = record["subject"]
+        subject_counts[subject] = (
+            subject_counts.get(subject, 0) + 1
+        )
+
+    for subject, count in sorted(subject_counts.items()):
+        print(f"  {subject}: {count}")
+
+
+# --------------------------------------------------
+# 7. Entry point
+# --------------------------------------------------
 
 if __name__ == "__main__":
     prepare_dataset()

@@ -38,6 +38,21 @@ const pyqschema=new mongoose.Schema({
     resource_type:{type:String,require:true},
     localfile:{type:String,require:true},
 })
+const feedback_schema=new mongoose.Schema({
+    name:{type:String,require:true},
+    email:{type:String,require:true},
+    subject:{type:String,require:true},
+    message:{type:String,require:true},
+    readBy:{
+    type:[
+     {
+     type:mongoose.Schema.Types.ObjectId,
+     ref:"Teacher-model"
+     },
+     ],
+    default:[],
+        },
+    },{timestamps:true})
 const Teacherschema=new mongoose.Schema({
     name:{type:String,require:true},
     email:{type:String,require:true},
@@ -46,6 +61,7 @@ const Teacherschema=new mongoose.Schema({
     Quiz_upload:{type:[Quizschema],default:[]},
     Notes_upload:{type:[Notesschema],default:[]},
     PYQ_upload:{type:[pyqschema],default:[]},
+    Feedback:{type:[feedback_schema],default:[]}
 },{minimize:false})
 const Teachermodel=mongoose.model("Teacher-model",Teacherschema);
 const Coursemodel=mongoose.model("Course-Model",Courseschema);
