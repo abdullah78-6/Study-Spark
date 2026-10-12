@@ -12,6 +12,7 @@ const dispatch=useDispatch();
   const pyqclient=useSelector(state=>state.main.pyqclient);
   const searchpyq=useSelector(state=>state.main.searchpyq);
   const [chk,setchk]=useState(false);
+  const [openpdfid,setopenpdfid]=useState(null);
   const debounced=useDebouncedCallback((value)=>{
   dispatch(control.setsearchpyq(value))
   },1000)
@@ -45,6 +46,9 @@ const dispatch=useDispatch();
     
     
   }
+  const togglepdf=(id)=>{
+        setopenpdfid(prev=>prev===id?null:id)
+    }
   useEffect(()=>{
   if(searchpyq.trim()===""){
     Fetchpyq();
@@ -69,9 +73,16 @@ const dispatch=useDispatch();
           <h1>status:{i.status}</h1>
           <h1>price:₹{i.price}</h1>
           </div>
-        {!chk?  <button onClick={()=>setchk(true)}>View PYQ</button>:<button onClick={()=>setchk(false)}>Close</button>}
-          {chk&&<Pdfviewer pdfurl={i.filename}/>}
-          
+      <button onClick={()=>togglepdf(i._id)}>{openpdfid===i._id?<>Close pdf previer</>:<>Preview full pyq</>}</button>
+          {openpdfid===i._id&&(
+              <div>
+               <div>
+                  <Pdfviewer pdfurl={i.filename}/>
+                </div>
+              </div>
+              
+            
+            )} 
           <button>BUY NOW</button>
         </div>
       ))}

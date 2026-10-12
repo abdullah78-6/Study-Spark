@@ -12,8 +12,8 @@ const Teacher_Navbar = () => {
     <div className='bg-gradient-to-r from-white via-sky-50 to-white shadow-md px-4 sm:px-8 py-3.5 sticky top-0 z-50 border-b border-sky-100 backdrop-blur-sm'>
       <div className='flex justify-between items-center'>
 
-        <Link to="/teacher_page"
-          onClick={()=>dispatch(control.setsidemenu(""))}
+        <Link to="/teacher_page/dashboard"
+          onClick={()=>dispatch(control.setsidemenu("one"))}
           className='text-xl sm:text-2xl font-extrabold text-slate-800 cursor-pointer select-none flex items-center gap-1 tracking-tight hover:opacity-80 transition-opacity'
         >
           <span className='w-2.5 h-2.5 rounded-full bg-gradient-to-br from-sky-400 to-cyan-500 shadow-sm shrink-0'></span>

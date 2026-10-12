@@ -13,6 +13,7 @@ import Pyqrouter from "./routes/PYQ-route.js"
 import NodeCache from "node-cache"
 import { cacheMiddleware } from "./middleware/cache-middleware.js"
 import Airouter from "./routes/AI-ROUTES.js"
+import Dasboardrouter from "./routes/Dashboard-routes.js"
 const app=express()
 app.use(cors({
     origin:"http://localhost:5173",
@@ -39,6 +40,7 @@ app.use("/api/feedback/",FeedbackRouter);
 app.use("/api/notes/",Notesrouter);
 app.use("/api/pyq/",Pyqrouter);
 app.use("/api/ai/",Airouter);
+app.use("/api/dash/",Dasboardrouter);
 const port=process.env.PORT
 app.listen(port,()=>{
     console.log("server is listning on ",port);

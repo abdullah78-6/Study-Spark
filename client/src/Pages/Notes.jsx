@@ -191,7 +191,7 @@ const Notes = ({url}) => {
                                         )}
                                     </button>
 
-                                    {/* Expanded PDF Reading Area */}
+                
                                     {openpdfid === i._id && (
                                         <section className="mt-6 min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
                                             <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-3 sm:px-5">
@@ -225,7 +225,7 @@ const Notes = ({url}) => {
                                         </section>
                                     )}
 
-                                    {/* Buy Button - Existing UI */}
+
                                     <button
                                         type="button"
                                         className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-white px-4 py-3 text-sm font-bold text-blue-700 transition-colors hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100"

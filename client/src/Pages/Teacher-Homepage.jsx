@@ -59,6 +59,7 @@ const Teacher_Homepage = ({url}) => {
         {/* <hr/> */}
         <div className='flex  min-h-[calc(100vh-64px)] '>
         <Sidebar url={url}/>
+        
         <main className='flex-1  min-w-0 p-4 sm:p-6'>
           <Outlet/>
         </main>

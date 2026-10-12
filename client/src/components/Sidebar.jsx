@@ -70,7 +70,7 @@ return (
 
         <ul className='w-full flex-1 flex flex-col justify-start items-stretch gap-1 p-2.5 sm:p-3 overflow-hidden '>
 
-          <li
+          <Link to="/teacher_page/dashboard"
             onClick={()=>dispatch(control.setsidemenu("one"))}
             className={`group relative flex items-center gap-3 pl-3.5 pr-3 py-2 rounded-lg cursor-pointer font-medium text-sm transition-all duration-200
               ${sidemenu==="one"
@@ -80,7 +80,7 @@ return (
             <span className={`absolute left-0 top-1/2 -translate-y-1/2 h-4 w-1 rounded-r-full bg-white transition-opacity ${sidemenu==="one" ? "opacity-100" : "opacity-0"}`}></span>
             <MdSpaceDashboard size={16} className={sidemenu==="one" ? "text-white" : "text-sky-400"} />
             Dashboard
-          </li>
+          </Link>
 
           <Link to="/teacher_page/Totalcourses"
             onClick={()=>dispatch(control.setsidemenu("two"))}
