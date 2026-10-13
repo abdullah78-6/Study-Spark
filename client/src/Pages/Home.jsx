@@ -35,7 +35,7 @@ const Home = ({url}) => {
     },[])
     
 return (
-    <div>
+    <div >
       <Navbar url={url}/>
       <Outlet/>
     

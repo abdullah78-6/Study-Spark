@@ -208,13 +208,7 @@ const Notes = ({url}) => {
                                                     </div>
                                                 </div>
 
-                                                <button
-                                                    type="button"
-                                                    onClick={() => togglepdf(i._id)}
-                                                    className="rounded-lg px-3 py-2 text-xs font-semibold text-blue-700 hover:bg-blue-50"
-                                                >
-                                                    Close reader
-                                                </button>
+                                                
                                             </div>
 
                                             <div className="w-full min-w-0 overflow-x-auto p-2 sm:p-4">
