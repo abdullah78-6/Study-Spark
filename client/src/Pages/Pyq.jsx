@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { FaDownload } from 'react-icons/fa';
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import { IoMdDownload } from "react-icons/io";
 import { control } from '../Redux/slice'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
@@ -51,6 +52,7 @@ const dispatch=useDispatch();
   const togglepdf=(id)=>{
         setopenpdfid(prev=>prev===id?null:id)
     }
+
   useEffect(()=>{
   if(searchpyq.trim()===""){
     Fetchpyq();
@@ -59,6 +61,15 @@ const dispatch=useDispatch();
   Searchapi();
 }
 },[searchpyq])
+const Downlaodpyq=(url,publicid)=>{
+        const finalurl=url.replace("/upload/","/upload/fl_attachment/")
+        const link=document.createElement("a")
+        link.href=finalurl;
+        link.setAttribute("download",`${publicid||"pyq"}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link)
+}
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800">
 
@@ -201,7 +212,7 @@ const dispatch=useDispatch();
                 </div>
 
                 {/* Action Buttons */}
-                <div className="mt-6 grid grid-cols-1 gap-3 border-t border-slate-100 pt-5 sm:grid-cols-2">
+                <div className="mt-6 flex justify-center items-center flex-wrap  gap-3 border-t border-slate-100 pt-5 sm:grid-cols-2">
 
                   <button
                     onClick={()=>togglepdf(i._id)}
@@ -222,6 +233,10 @@ const dispatch=useDispatch();
                     <FaShoppingCart />
                     BUY NOW
                   </button>
+                  <button type="button"className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 active:scale-[0.98]"onClick={()=>Downlaodpyq(i.filename,i.public_id)}
+                  >
+                    <IoMdDownload className='text-2xl'/><span>Download</span>
+                  </button>
 
                 </div>
 
@@ -232,14 +247,6 @@ const dispatch=useDispatch();
 {/* PDF Preview */}
 {openpdfid === i._id && (
   <section className="mt-6 min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
-<button
-  type="button"
-  onClick={() => window.open(i.filename, '_blank', 'noopener,noreferrer')}
-  className="mb-4 ml-4 inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-md shadow-blue-200 transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-700 hover:shadow-lg active:translate-y-0"
->
-  <FaDownload className="text-base" />
-  Download PYQ
-</button>
     {/* Preview Header */}
     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-3 sm:px-5">
       <div className="flex min-w-0 items-center gap-3">

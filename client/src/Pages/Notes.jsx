@@ -5,6 +5,8 @@ import Footer from '../components/Footer'
 import { control } from '../Redux/slice'
 import { useDispatch, useSelector } from 'react-redux'
 import Pdfviewer from './Pdfviewer'
+import toast from 'react-hot-toast'
+import { IoMdDownload } from "react-icons/io";
 import {
     FaBookOpen,
     FaGraduationCap,
@@ -20,6 +22,7 @@ const Notes = ({url}) => {
     const dispatch=useDispatch();
     const notesclient=useSelector(state=>state.main.notesclient);
     const [openpdfid,setopenpdfid]=useState(null);
+    const backendemail=useSelector(state=>state.main.backendemail);
     const Fetchnotes=async()=>{
         try {
             const res=await axios.get(url+"/api/notes/get_notes_client",{
@@ -37,6 +40,21 @@ const Notes = ({url}) => {
     },[])
     const togglepdf=(id)=>{
         setopenpdfid(prev=>prev===id?null:id)
+    }
+    const Downloadnotes=(url,publicid)=>{
+        if(!backendemail){
+            toast.error("User Login Required");
+            return ;
+        }
+    const downloadurl=url.replace("/upload/","/upload/fl_attachment/")  
+      const link=document.createElement("a");
+      link.href=downloadurl;
+      link.setAttribute("download",`${publicid||"study-notes"}.pdf`);
+      link.filename="NOTES.pdf"
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
     }
  return (
         <div className="min-h-screen bg-slate-50 text-slate-800">
@@ -227,7 +245,13 @@ const Notes = ({url}) => {
                                         <FaShoppingCart />
                                         BUY NOW
                                     </button>
+                                    <button onClick={()=>Downloadnotes(i.filename,i.public_id)}
+                                    type="button"
+                                        className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-white px-4 py-3 text-sm font-bold text-blue-700 transition-colors hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100 "
+                                    ><IoMdDownload className='text-xl'/><span>Download</span></button>
+                                    
                                 </div>
+
                             </article>
                         ))}
                     </div>

@@ -11,14 +11,14 @@ const Footer = ({url}) => {
   const [input,setinput]=useState("");
   const [msg,setmsg]=useState([])
   const [loading,setloading]=useState(false);
-  const chatendref=useRef(null);
-  const inputref=useRef(null);
+  const [chatendref,setchatendref]=useState(null);
   useEffect(()=>{
-    chatendref.current?.scrollIntoView({
+    setchatendref.current?.scrollIntoView({
       behavior:"smooth",
       block:"end"
     })
   },[msg,loading])
+  
   const Submitbot=async(e)=>{
     e.preventDefault()
     if(!input?.trim()){
@@ -57,6 +57,7 @@ setloading(true)
       }
       else{
         toast.error(res.data.message||"Unable to get an answer")
+        return
       }
     } catch (error) {
       console.log("bot error",error);
@@ -206,7 +207,6 @@ setloading(true)
         >
           <div className="flex items-center gap-2">
             <input
-              ref={inputref}
               type="text"
               value={input}
               onChange={(e) => setinput(e.target.value)}
