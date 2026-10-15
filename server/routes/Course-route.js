@@ -3,12 +3,13 @@ import { Addcourse, Deletecourse, Enroolement_payment, Getcourse, Getcourse_teac
 import { upload } from "../utils/multer.js";
 import Authmiddleware from "../middleware/teacher-auth-middleware.js";
 import { cacheMiddleware } from "../middleware/cache-middleware.js";
+import StudentAuthmiddleware from "../middleware/student-auth-middleware.js";
 const Courserouter=express.Router();
 Courserouter.post("/addcourse",upload.single("image"),Authmiddleware,Addcourse);
 Courserouter.delete("/deletecourse",Authmiddleware,Deletecourse);
 Courserouter.get("/getcourse",cacheMiddleware(3),Getcourse);
 Courserouter.get("/getcourse_teacher",cacheMiddleware(3),Authmiddleware,Getcourse_teacher);
-Courserouter.post("/payment",Enroolement_payment);
-Courserouter.get("/chk_payment",Payment_verifivation);
+Courserouter.post("/payment",StudentAuthmiddleware,Enroolement_payment);
+Courserouter.get("/chk_payment",StudentAuthmiddleware,Payment_verifivation);
 export default Courserouter;
 
