@@ -23,6 +23,13 @@ const Notes = ({url}) => {
     const notesclient=useSelector(state=>state.main.notesclient);
     const [openpdfid,setopenpdfid]=useState(null);
     const backendemail=useSelector(state=>state.main.backendemail);
+    const[flow2,setflow2]=useState(false)
+    useEffect(()=>{
+        const status2=localStorage.getItem("status2");
+        if(status2){
+            setflow2(true)
+        }
+    },[]);
     const Fetchnotes=async()=>{
         try {
             const res=await axios.get(url+"/api/notes/get_notes_client",{
@@ -42,8 +49,13 @@ const Notes = ({url}) => {
         setopenpdfid(prev=>prev===id?null:id)
     }
     const Downloadnotes=(url,publicid)=>{
+        
         if(!backendemail){
             toast.error("User Login Required");
+            return ;
+        }
+        if(!flow2){
+            toast.error("Please Purchase Notes")
             return ;
         }
     const downloadurl=url.replace("/upload/","/upload/fl_attachment/")  
@@ -56,6 +68,122 @@ const Notes = ({url}) => {
       document.body.removeChild(link);
 
     }
+const Enrolment = async (_id) => {
+  if (!backendemail) {
+    toast.error("Student login required");
+    return;
+  }
+
+  if (!_id) {
+    toast.error("Course ID is missing");
+    return;
+  }
+
+  if (!window.Razorpay) {
+    toast.error(
+      "Razorpay Checkout did not load. Refresh the page and try again."
+    );
+    return;
+  }
+
+  try {
+    // 1. Ask the backend to create a Razorpay order.
+    const { data } = await axios.post(
+      `${url}/api/notes/notes_payment`,
+      { _id: String(_id) },
+      { withCredentials: true }
+    );
+
+    if (!data.status) {
+      toast.error(data.message || "Unable to create payment order");
+      return;
+    }
+
+    // 2. Open Razorpay Checkout.
+    const options = {
+      key: data.key,
+      amount: data.amount,
+      currency: data.currency,
+      name: "Study·Spark",
+      description: `Enrollment: ${notesclient.subject}`,
+      order_id: data.order_id,
+
+      handler: async (response) => {
+        // 3. Verify the payment on the backend.
+        try {
+          setflow2(true)
+          localStorage.setItem("status2",true);
+          const verification = await axios.post(
+            `${url}/api/notes/chk_payment`,
+            {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              course_id: data.course_id,
+            },
+            { withCredentials: true }
+          );
+
+          if (verification.data.status) {
+            toast.success(
+              verification.data.message ||
+                "Enrollment successful!"
+            );
+
+            // Refresh enrollment-related UI here if needed.
+          } else {
+            toast.error(
+              verification.data.message ||
+                "Payment verification failed"
+            );
+          }
+        } catch (error) {
+          // console.error(
+          //   "Payment verification error:",
+          //   error.response?.data || error.message
+          // );
+
+          // toast.error(
+          //   error.response?.data?.message ||
+          //     "Payment may have completed, but verification failed. Check your enrollment before paying again."
+          // );
+        }
+      },
+
+      modal: {
+        ondismiss: () => {
+          toast("Payment window closed");
+        },
+      },
+
+      theme: {
+        color: "#1d4ed8",
+      },
+    };
+
+    const checkout = new window.Razorpay(options);
+
+    checkout.on("payment.failed", (response) => {
+      console.error("Razorpay payment failed:", response.error);
+
+      // toast.error(
+      //   response.error?.description || "Payment failed"
+      // );
+    });
+
+    checkout.open();
+  } catch (error) {
+    console.error(
+      "Order creation error:",
+      error.response?.data || error.message
+    );
+
+    // toast.error(
+    //   error.response?.data?.message ||
+    //     "Unable to start payment"
+    // );
+  }
+};
  return (
         <div className="min-h-screen bg-slate-50 text-slate-800">
             <Navbar url={url} />
@@ -187,7 +315,7 @@ const Notes = ({url}) => {
                                     </div>
 
                                     {/* PDF Toggle */}
-                                    <button
+                                  {flow2&&  <button
                                         type="button"
                                         onClick={() => togglepdf(i._id)}
                                         className={`mt-5 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold transition-colors focus:outline-none focus:ring-4 focus:ring-blue-100 ${
@@ -208,6 +336,7 @@ const Notes = ({url}) => {
                                             </>
                                         )}
                                     </button>
+                                        }   
 
                 
                                     {openpdfid === i._id && (
@@ -239,6 +368,7 @@ const Notes = ({url}) => {
 
 
                                     <button
+                                    onClick={()=>Enrolment(i._id)}
                                         type="button"
                                         className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-white px-4 py-3 text-sm font-bold text-blue-700 transition-colors hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100"
                                     >

@@ -10,6 +10,6 @@ Courserouter.delete("/deletecourse",Authmiddleware,Deletecourse);
 Courserouter.get("/getcourse",cacheMiddleware(3),Getcourse);
 Courserouter.get("/getcourse_teacher",cacheMiddleware(3),Authmiddleware,Getcourse_teacher);
 Courserouter.post("/payment",StudentAuthmiddleware,Enroolement_payment);
-Courserouter.get("/chk_payment",StudentAuthmiddleware,Payment_verifivation);
+Courserouter.post("/chk_payment",StudentAuthmiddleware,Payment_verifivation);
 export default Courserouter;
 

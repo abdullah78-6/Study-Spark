@@ -39,6 +39,9 @@ const Navbar = ({url}) => {
         });
         if(response.data.status){
             dispatch(control.setbackendemail(""));
+            localStorage.removeItem("status")
+            localStorage.removeItem("status2")
+            localStorage.removeItem("status3")
             
             
         toast.success(response.data.message);

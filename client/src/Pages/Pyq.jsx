@@ -10,12 +10,15 @@ import Pdfviewer from './Pdfviewer'
 import { useDebounce } from 'use-debounce';
 import { useDebouncedCallback } from 'use-debounce';
 import {FaSearch,FaBookOpen,FaUserGraduate,FaUniversity,FaTag,FaEye,FaTimes,FaShoppingCart,FaFilePdf,FaGraduationCap,} from 'react-icons/fa';
+import {toast} from "react-hot-toast"
 const Pyq = ({url}) => {
 const dispatch=useDispatch();
   const pyqclient=useSelector(state=>state.main.pyqclient);
   const searchpyq=useSelector(state=>state.main.searchpyq);
   const [chk,setchk]=useState(false);
   const [openpdfid,setopenpdfid]=useState(null);
+  const [flow3,setflow3]=useState(false);
+  const backendemail=useSelector(state=>state.main.backendemail);
   const debounced=useDebouncedCallback((value)=>{
   dispatch(control.setsearchpyq(value))
   },1000)
@@ -61,7 +64,21 @@ const dispatch=useDispatch();
   Searchapi();
 }
 },[searchpyq])
+useEffect(()=>{
+  const status3=localStorage.getItem("status3")
+  if(status3){
+    setflow3(status3);
+  }
+},[])
 const Downlaodpyq=(url,publicid)=>{
+  if(!backendemail){
+    toast.error("Student Login Required");
+    return ;
+  }
+  if(!flow3){
+    toast.error("Please purchase pyq");
+    return ;
+  }
         const finalurl=url.replace("/upload/","/upload/fl_attachment/")
         const link=document.createElement("a")
         link.href=finalurl;
@@ -70,6 +87,123 @@ const Downlaodpyq=(url,publicid)=>{
         link.click();
         document.body.removeChild(link)
 }
+const Enrolment = async (_id) => {
+  if (!backendemail) {
+    toast.error("Student login required");
+    return;
+  }
+
+  if (!_id) {
+    toast.error("Notes ID is missing");
+    return;
+  }
+
+  if (!window.Razorpay) {
+    toast.error(
+      "Razorpay Checkout did not load. Refresh the page and try again."
+    );
+    return;
+  }
+
+  try {
+    // 1. Ask the backend to create a Razorpay order.
+    const { data } = await axios.post(
+      `${url}/api/pyq/pyq_payment`,
+      { _id: String(_id) },
+      { withCredentials: true }
+    );
+
+    if (!data.status) {
+      toast.error(data.message || "Unable to create payment order");
+      return;
+    }
+
+    // 2. Open Razorpay Checkout.
+    const options = {
+      key: data.key,
+      amount: data.amount,
+      currency: data.currency,
+      name: "Study·Spark",
+      description: `Enrollment: ${pyqclient.subject}`,
+      order_id: data.order_id,
+
+      handler: async (response) => {
+        // 3. Verify the payment on the backend.
+        try {
+          setflow3(true)
+          localStorage.setItem("status3",true);
+          const verification = await axios.post(
+            `${url}/api/pyq/chk_payment`,
+            {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              course_id: data.course_id,
+            },
+            { withCredentials: true }
+          );
+
+          if (verification.data.status) {
+            toast.success(
+              verification.data.message ||
+                "Enrollment successful!"
+            );
+
+            // Refresh enrollment-related UI here if needed.
+          } else {
+            toast.error(
+              verification.data.message ||
+                "Payment verification failed"
+            );
+          }
+        } catch (error) {
+          // console.error(
+          //   "Payment verification error:",
+          //   error.response?.data || error.message
+          // );
+
+          // toast.error(
+          //   error.response?.data?.message ||
+          //     "Payment may have completed, but verification failed. Check your enrollment before paying again."
+          // );
+        }
+      },
+
+      modal: {
+        ondismiss: () => {
+          toast("Payment window closed");
+        },
+      },
+
+      theme: {
+        color: "#1d4ed8",
+      },
+    };
+
+    const checkout = new window.Razorpay(options);
+
+    checkout.on("payment.failed", (response) => {
+      console.error("Razorpay payment failed:", response.error);
+
+      // toast.error(
+      //   response.error?.description || "Payment failed"
+      // );
+    });
+
+    checkout.open();
+  } catch (error) {
+    console.error(
+      "Order creation error:",
+      error.response?.data || error.message
+    );
+
+    // toast.error(
+    //   error.response?.data?.message ||
+    //     "Unable to start payment"
+    // );
+  }
+};
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800">
 
@@ -214,7 +348,7 @@ const Downlaodpyq=(url,publicid)=>{
                 {/* Action Buttons */}
                 <div className="mt-6 flex justify-center items-center flex-wrap  gap-3 border-t border-slate-100 pt-5 sm:grid-cols-2">
 
-                  <button
+           {flow3&&<button
                     onClick={()=>togglepdf(i._id)}
                     className={`flex min-h-11 items-center justify-center gap-2 rounded-xl border px-3 py-3 text-sm font-semibold transition ${
                       openpdfid===i._id
@@ -225,9 +359,10 @@ const Downlaodpyq=(url,publicid)=>{
                     {openpdfid===i._id
                       ? <><FaTimes/> Close PDF Preview</>
                       : <><FaEye/> Preview Full PYQ</>}
-                  </button>
+                  </button>}
 
                   <button
+                  onClick={()=>Enrolment(i._id)}
                     className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 active:scale-[0.98]"
                   >
                     <FaShoppingCart />

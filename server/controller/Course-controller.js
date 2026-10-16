@@ -426,7 +426,7 @@ const Enroolement_payment = async (req, res) => {
 
 
 const Payment_verifivation = async (req, res) => {
-  try {
+ try{ 
     const {
       razorpay_order_id,
       razorpay_payment_id,
@@ -641,14 +641,21 @@ const Payment_verifivation = async (req, res) => {
 
     student.Student_Course_Enrollment.push({
       course_id: String(course._id),
+      module:course.module,
       name: course.name,
       image_address: course.image_address,
+      Fileid:course.Fileid,
+      description:course.description,
       price: Number(course.price),
+      urls:course.urls,
+      demo:course.demo,
       gst: Number(course.gst ?? 0),
       payment_id: payment.id,
       order_id: order.id,
       payment_status: true,
       enrolled_at: new Date(),
+      feature:course.feature,
+      outcome:course.outcome
     });
 
     await student.save();
@@ -663,7 +670,41 @@ const Payment_verifivation = async (req, res) => {
       status: true,
       message: "Payment verified and enrollment successful!",
     });
-  } catch (error) {
+
+
+
+
+
+// BASIC CODE FOR CONCEPT CLARITY
+// try{
+
+    // const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+//     const{razorpay_order_id,razorpay_payment_id,razorpay_signature,course_id}=req.body;
+
+// const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+// const expectedSignature = crypto
+//   .createHmac("sha256", process.env.RAZORPAY_API_SECRET)
+//   .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+//   .digest("hex");
+
+// if (expectedSignature === razorpay_signature) {
+
+//   res.json({
+//     success: true,
+//     message: "Payment verified successfully"
+//   });
+
+// } else {
+
+//   res.status(400).json({
+//     success: false,
+//     message: "Payment verification failed"
+//   });
+// }
+// }
+
+}catch (error) {
     console.error(
       "Payment verification error:",
       error.error || error
@@ -676,7 +717,7 @@ const Payment_verifivation = async (req, res) => {
         error.message ||
         "Unexpected server error during payment verification.",
     });
-  }
+    }
 };
 
 

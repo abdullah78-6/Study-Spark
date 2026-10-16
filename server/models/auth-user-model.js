@@ -4,7 +4,9 @@ const Userschema=new mongoose.Schema({
     email:{type:String,require:true},
     password:{type:String,require:true},
     Student_Course_Enrollment:{type:[],default:[]},
-    course_payment:{type:[]}
+    Student_Notes_Enrollment:{type:[],default:[]},
+    Student_PYQ_Enrollment:{type:[],default:[]}
+
 })
 const Usermodel=mongoose.model("user-model",Userschema);
 export default Usermodel;

@@ -26,116 +26,9 @@ const Couresedetail = ({url}) => {
         setflow(status);
       }
     },[])
-//     const Enrolment = async (_id) => {
-//   if (!backendemail) {
-//     toast.error("Student Login Required");
-//     return;
-//   }
-
-//   if (!_id) {
-//     toast.error("Course ID is missing");
-//     return;
-//   }
-
-//   if (!window.Razorpay) {
-//     toast.error("Razorpay Checkout did not load");
-//     return;
-//   }
-
-//   try {
-//     // Create an order using the embedded course ID.
-//     const res = await axios.post(
-//       `${url}/api/course/payment`,
-//       { _id },
-//       { withCredentials: true }
-//     );
-
-//     if (!res.data.status) {
-//       toast.error(res.data.message || "Unable to create order");
-//       return;
-//     }
-
-//     const options = {
-//       key: res.data.key,
-//       amount: res.data.amount,
-//       currency: res.data.currency,
-//       name: "Study Spark",
-//       description: `Enrollment: ${detailcourse.name}`,
-//       order_id: res.data.order_id,
-
-//       handler: async (response) => {
-//         try {
-//           const verifyRes = await axios.post(
-//             `${url}/api/course/chk_payment`,
-//             {
-//               ...response,
-//               course_id: res.data.course_id,
-//             },
-//             { withCredentials: true }
-//           );
-
-//           if (verifyRes.data.status) {
-//             toast.success(
-//               verifyRes.data.message ||
-//               "Enrollment successful!"
-//             );
-//           } else {
-//             toast.error(
-//               verifyRes.data.message ||
-//               "Payment verification failed"
-//             );
-//           }
-//         } catch (error) {
-//           console.error(
-//             "Payment verification error:",
-//             error.response?.data || error.message
-//           );
-
-//           toast.error(
-//             error.response?.data?.message ||
-//             "Payment completed, but verification failed. Contact support before trying to pay again."
-//           );
-//         }
-//       },
-
-//       modal: {
-//         ondismiss: () => {
-//           toast("Payment window closed");
-//         },
-//       },
-
-//       theme: {
-//         color: "#1d4ed8",
-//       },
-//     };
-
-//     const razorpay = new window.Razorpay(options);
-
-//     razorpay.on("payment.failed", (response) => {
-//       console.error("Razorpay payment failed:", response.error);
-//       toast.error(
-//         response.error?.description || "Payment failed"
-//       );
-//     });
-
-//     razorpay.open();
-//   } catch (error) {
-//     console.error(
-//       "Enrollment payment error:",
-//       error.response?.data || error.message
-//     );
-
-//     toast.error(
-//       error.response?.data?.message ||
-//       "Unable to start payment"
-//     );
-//   }
-// };
-
-
-const Enrolment = async (_id) => {
+    const Enrolment = async (_id) => {
   if (!backendemail) {
-    toast.error("Student login required");
+    toast.error("Student Login Required");
     return;
   }
 
@@ -145,73 +38,66 @@ const Enrolment = async (_id) => {
   }
 
   if (!window.Razorpay) {
-    toast.error(
-      "Razorpay Checkout did not load. Refresh the page and try again."
-    );
+    toast.error("Razorpay Checkout did not load");
     return;
   }
 
   try {
-    // 1. Ask the backend to create a Razorpay order.
-    const { data } = await axios.post(
+    // Create an order using the embedded course ID.
+    const res = await axios.post(
       `${url}/api/course/payment`,
-      { _id: String(_id) },
+      { _id },
       { withCredentials: true }
     );
 
-    if (!data.status) {
-      toast.error(data.message || "Unable to create payment order");
+    if (!res.data.status) {
+      toast.error(res.data.message || "Unable to create order");
       return;
     }
 
-    // 2. Open Razorpay Checkout.
     const options = {
-      key: data.key,
-      amount: data.amount,
-      currency: data.currency,
-      name: "Study·Spark",
+      key: res.data.key,
+      amount: res.data.amount,
+      currency: res.data.currency,
+      name: "Study Spark",
       description: `Enrollment: ${detailcourse.name}`,
-      order_id: data.order_id,
+      order_id: res.data.order_id,
 
       handler: async (response) => {
-        // 3. Verify the payment on the backend.
         try {
-          setflow(true)
-          localStorage.setItem("status",true);
-          const verification = await axios.post(
+          const verifyRes = await axios.post(
             `${url}/api/course/chk_payment`,
             {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              course_id: data.course_id,
+              ...response,
+              course_id: res.data.course_id,
             },
             { withCredentials: true }
           );
 
-          if (verification.data.status) {
+          if (verifyRes.data.status) {
             toast.success(
-              verification.data.message ||
-                "Enrollment successful!"
+              verifyRes.data.message ||
+              "Enrollment successful!"
             );
-
-            // Refresh enrollment-related UI here if needed.
           } else {
             toast.error(
-              verification.data.message ||
-                "Payment verification failed"
+              verifyRes.data.message ||
+              "Payment verification failed"
             );
+            console.log(verifyRes.data.message)
           }
         } catch (error) {
-          // console.error(
-          //   "Payment verification error:",
-          //   error.response?.data || error.message
-          // );
+          console.error(
+            "Payment verification error:",
+            error.response?.data || error.message
+          );
 
-          // toast.error(
-          //   error.response?.data?.message ||
-          //     "Payment may have completed, but verification failed. Check your enrollment before paying again."
-          // );
+          toast.error(
+            error.response?.data?.message ||
+            "Payment completed, but verification failed. Contact support before trying to pay again."
+          );
+          console.log(error.response);
+          console.log("payment failed bug ");
         }
       },
 
@@ -226,29 +112,150 @@ const Enrolment = async (_id) => {
       },
     };
 
-    const checkout = new window.Razorpay(options);
+    const razorpay = new window.Razorpay(options);
 
-    checkout.on("payment.failed", (response) => {
+    razorpay.on("payment.failed", (response) => {
       console.error("Razorpay payment failed:", response.error);
-
-      // toast.error(
-      //   response.error?.description || "Payment failed"
-      // );
+      toast.error(
+        response.error?.description || "Payment failed"
+      );
     });
 
-    checkout.open();
+    razorpay.open();
   } catch (error) {
     console.error(
-      "Order creation error:",
+      "Enrollment payment error:",
       error.response?.data || error.message
     );
 
-    // toast.error(
-    //   error.response?.data?.message ||
-    //     "Unable to start payment"
-    // );
+    toast.error(
+      error.response?.data?.message ||
+      "Unable to start payment"
+    );
   }
 };
+
+
+
+
+
+// // FLOW WALA ENROLLMENT
+// const Enrolment = async (_id) => {
+//   if (!backendemail) {
+//     toast.error("Student login required");
+//     return;
+//   }
+
+//   if (!_id) {
+//     toast.error("Course ID is missing");
+//     return;
+//   }
+
+//   if (!window.Razorpay) {
+//     toast.error(
+//       "Razorpay Checkout did not load. Refresh the page and try again."
+//     );
+//     return;
+//   }
+
+//   try {
+//     // 1. Ask the backend to create a Razorpay order.
+//     const { data } = await axios.post(
+//       `${url}/api/course/payment`,
+//       { _id: String(_id) },
+//       { withCredentials: true }
+//     );
+
+//     if (!data.status) {
+//       toast.error(data.message || "Unable to create payment order");
+//       return;
+//     }
+
+//     // 2. Open Razorpay Checkout.
+//     const options = {
+//       key: data.key,
+//       amount: data.amount,
+//       currency: data.currency,
+//       name: "Study·Spark",
+//       description: `Enrollment: ${detailcourse.name}`,
+//       order_id: data.order_id,
+
+//       handler: async (response) => {
+//         // 3. Verify the payment on the backend.
+//         try {
+//           setflow(true)
+//           localStorage.setItem("status",true);
+//           const verification = await axios.post(
+//             `${url}/api/course/chk_payment`,
+//             {
+//               razorpay_order_id: response.razorpay_order_id,
+//               razorpay_payment_id: response.razorpay_payment_id,
+//               razorpay_signature: response.razorpay_signature,
+//               course_id: data.course_id,
+//             },
+//             { withCredentials: true }
+//           );
+
+//           if (verification.data.status) {
+//             toast.success(
+//               verification.data.message ||
+//                 "Enrollment successful!"
+//             );
+
+//             // Refresh enrollment-related UI here if needed.
+//           } else {
+//             toast.error(
+//               verification.data.message ||
+//                 "Payment verification failed"
+//             );
+//           }
+//         } catch (error) {
+//           // console.error(
+//           //   "Payment verification error:",
+//           //   error.response?.data || error.message
+//           // );
+
+//           // toast.error(
+//           //   error.response?.data?.message ||
+//           //     "Payment may have completed, but verification failed. Check your enrollment before paying again."
+//           // );
+//         }
+//       },
+
+//       modal: {
+//         ondismiss: () => {
+//           toast("Payment window closed");
+//         },
+//       },
+
+//       theme: {
+//         color: "#1d4ed8",
+//       },
+//     };
+
+//     const checkout = new window.Razorpay(options);
+
+//     checkout.on("payment.failed", (response) => {
+//       console.error("Razorpay payment failed:", response.error);
+
+//       // toast.error(
+//       //   response.error?.description || "Payment failed"
+//       // );
+//     });
+
+//     checkout.open();
+//   } catch (error) {
+//     console.error(
+//       "Order creation error:",
+//       error.response?.data || error.message
+//     );
+
+//     // toast.error(
+//     //   error.response?.data?.message ||
+//     //     "Unable to start payment"
+//     // );
+//   }
+// };
    return (
     <div className="min-h-screen bg-slate-50 text-slate-800">
       <Navbar url={url} />
