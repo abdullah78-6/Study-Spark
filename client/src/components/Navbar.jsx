@@ -111,6 +111,16 @@ return (
         >
           Feedback
         </Link>
+        <Link to="/my_learning"
+          onClick={() => dispatch(control.setnavclass("Purchase"))}
+          className={`cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
+            navclass === "Purchase"
+              ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+              : "text-slate-600 hover:bg-blue-50 hover:text-blue-600"
+          }`}
+        >
+          My Purchase
+        </Link>
          <Link to="/Notes"
           onClick={() => dispatch(control.setnavclass("Notes"))}
           className={`cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
@@ -214,6 +224,16 @@ return (
           }`}
         >
           Notes
+        </Link>
+        <Link to="/my_learning"
+          onClick={() => dispatch(control.setnavclass("purchase"))}
+          className={`cursor-pointer rounded-lg px-3 py-2 text-xs font-semibold transition-all ${
+            navclass === "purchase"
+              ? "bg-blue-600 text-white"
+              : "text-slate-600 hover:bg-blue-50 hover:text-blue-600"
+          }`}
+        >
+          My Purchase
         </Link>
         <Link to="/PYQs"
           onClick={() => dispatch(control.setnavclass("PYQ"))}

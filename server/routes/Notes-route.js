@@ -10,5 +10,5 @@ Notesrouter.get("/get_notes",cacheMiddleware(3),Authmiddleware,Getnotes);
 Notesrouter.delete("/del_notes",Authmiddleware,Deletenotes);
 Notesrouter.get("/get_notes_client",cacheMiddleware(3),Getnotesclient);
 Notesrouter.post("/notes_payment",StudentAuthmiddleware,Notes_payment);
-Notesrouter.get("/chk_payment",StudentAuthmiddleware,Verifypayment);
+Notesrouter.post("/chk_payment",StudentAuthmiddleware,Verifypayment);
 export default Notesrouter;

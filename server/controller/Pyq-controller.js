@@ -195,7 +195,7 @@ const Enrollment=async(req,res)=>{
         if (alreadyEnrolled) {
           return res.status(409).json({
             status: false,
-            message: "You are already enrolled in this course",
+            message: "You  already purchase this pyq",
           });
         }
     
@@ -252,7 +252,7 @@ const Enrollment=async(req,res)=>{
 
 }
 const Verifypayment=async(req,res)=>{
-    try {
+  try{ 
         const {
           razorpay_order_id,
           razorpay_payment_id,
@@ -311,22 +311,22 @@ const Verifypayment=async(req,res)=>{
     
         // 2. Find the course and logged-in student.
         const teacher = await Teachermodel.findOne({
-          "Course_upload._id": course_id,
+          "PYQ_upload._id": course_id,
         });
     
         if (!teacher) {
           return res.status(404).json({
             status: false,
-            message: "Course not found.",
+            message: "PYQ not found.",
           });
         }
     
-        const course = teacher.Course_upload.id(course_id);
+        const course = teacher.PYQ_upload.id(course_id);
     
         if (!course) {
           return res.status(404).json({
             status: false,
-            message: "Course not found.",
+            message: "PYQ not found.",
           });
         }
     
@@ -340,7 +340,7 @@ const Verifypayment=async(req,res)=>{
         }
     
         const alreadyEnrolled = (
-          student.Student_Course_Enrollment || []
+          student.Student_PYQ_Enrollment || []
         ).some(
           (item) =>
             String(item.course_id ?? item._id) === String(course._id)
@@ -391,7 +391,7 @@ const Verifypayment=async(req,res)=>{
         ) {
           return res.status(400).json({
             status: false,
-            message: "Payment amount or currency does not match the course fee.",
+            message: "Payment amount or currency does not match the PYQ fee.",
           });
         }
     
@@ -401,7 +401,7 @@ const Verifypayment=async(req,res)=>{
         ) {
           return res.status(400).json({
             status: false,
-            message: "This order does not belong to this student and course.",
+            message: "This order does not belong to this student. ",
           });
         }
     
@@ -409,7 +409,7 @@ const Verifypayment=async(req,res)=>{
         if (alreadyEnrolled) {
           return res.status(200).json({
             status: true,
-            message: "You are already enrolled in this course.",
+            message: "You  already Purchase This PYQ",
           });
         }
     
@@ -465,17 +465,22 @@ const Verifypayment=async(req,res)=>{
           });
         }
     
-        student.Student_Course_Enrollment.push({
+        student.Student_PYQ_Enrollment.push({
           course_id: String(course._id),
-          name: course.name,
-          image_address: course.image_address,
+          authorname:course.authorname,
+          college_name:course.college_name,
+          subject: course.subject,
+          status: course.status,
+          filename:course.filename,
           price: Number(course.price),
-          gst: Number(course.gst ?? 0),
+          public_id:course.public_id,
+          resource_type:course.resource_type,
+          localfile:course.localfile ,
           payment_id: payment.id,
           order_id: order.id,
           payment_status: true,
           enrolled_at: new Date(),
-        });
+    });
     
         await student.save();
     
@@ -489,20 +494,20 @@ const Verifypayment=async(req,res)=>{
           status: true,
           message: "Payment verified and enrollment successful!",
         });
-      } catch (error) {
-        console.error(
-          "Payment verification error:",
-          error.error || error
-        );
-    
-        return res.status(500).json({
-          status: false,
-          message:
-            error.error?.description ||
-            error.message ||
-            "Unexpected server error during payment verification.",
-        });
+    }catch (error) {
+      console.error(
+        "Payment verification error:",
+        error.error || error
+      );
+  
+      return res.status(500).json({
+        status: false,
+        message:
+          error.error?.description ||
+          error.message ||
+          "Unexpected server error during payment verification.",
+      });
       }
-
+   
 }
 export {Addpyq,Getpyqteacher,Deletepyq,Getpyqclient,Searchapi,Enrollment,Verifypayment};

@@ -25,6 +25,7 @@ import Pyq from "./Pages/Pyq"
 import Notes from "./Pages/Notes"
 import Couresedetail from "./Pages/Couresedetail"
 import Dashboard from "./Pages/Teacherpages/Dashboard"
+import Mylearning from "./Pages/My-learning"
 function App() {
   const url="http://localhost:5000"
   const dispatch=useDispatch();
@@ -86,6 +87,7 @@ function App() {
     <Route path="/PYQs" element={<Pyq url={url}/>}></Route>
     <Route path="/Notes" element={<Notes url={url}/>}></Route>
     <Route path="/quiz_details" element={<Quizdetails url={url}/>}></Route>
+    <Route path="/my_learning" element={<Mylearning url={url}/>}></Route>
     <Route path="/course_details" element={<Couresedetail url={url}/>}></Route>
     <Route path="/Contact-us" element={<Contact url={url}/>}></Route>
     <Route path="/teacher_page" element={backendemail2?<Teacher_Homepage url={url}/>:<Navigate to="/Login" replace/>}>
