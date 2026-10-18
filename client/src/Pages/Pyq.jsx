@@ -17,7 +17,6 @@ const dispatch=useDispatch();
   const searchpyq=useSelector(state=>state.main.searchpyq);
   const [chk,setchk]=useState(false);
   const [openpdfid,setopenpdfid]=useState(null);
-  const [flow3,setflow3]=useState(false);
   const backendemail=useSelector(state=>state.main.backendemail);
   const debounced=useDebouncedCallback((value)=>{
   dispatch(control.setsearchpyq(value))
@@ -64,21 +63,12 @@ const dispatch=useDispatch();
   Searchapi();
 }
 },[searchpyq])
-useEffect(()=>{
-  const status3=localStorage.getItem("status3")
-  if(status3){
-    setflow3(status3);
-  }
-},[])
 const Downlaodpyq=(url,publicid)=>{
   if(!backendemail){
     toast.error("Student Login Required");
     return ;
   }
-  if(!flow3){
-    toast.error("Please purchase pyq");
-    return ;
-  }
+ 
         const finalurl=url.replace("/upload/","/upload/fl_attachment/")
         const link=document.createElement("a")
         link.href=finalurl;
@@ -341,7 +331,7 @@ const Enrolment = async (_id) => {
                 {/* Action Buttons */}
                 <div className="mt-6 flex justify-center items-center flex-wrap  gap-3 border-t border-slate-100 pt-5 sm:grid-cols-2">
 
-           {flow3&&<button
+           <button
                     onClick={()=>togglepdf(i._id)}
                     className={`flex min-h-11 items-center justify-center gap-2 rounded-xl border px-3 py-3 text-sm font-semibold transition ${
                       openpdfid===i._id
@@ -352,7 +342,7 @@ const Enrolment = async (_id) => {
                     {openpdfid===i._id
                       ? <><FaTimes/> Close PDF Preview</>
                       : <><FaEye/> Preview Full PYQ</>}
-                  </button>}
+                  </button>
 
                   <button
                   onClick={()=>Enrolment(i._id)}

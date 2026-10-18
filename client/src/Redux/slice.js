@@ -74,7 +74,23 @@ const clientslice=createSlice({
             gst:null,
             price:null
         },
-        noti:false
+        noti:false,
+        purchasecourse:[],
+        learningcourse:{
+            name:null,
+            image:null,
+            id:null,
+            modules:null,
+            description:null,
+            urls:[],
+            demo:null,
+            outcome:null,
+            feature:null,
+            gst:null,
+            price:null
+        },
+        purchasenotes:[],
+        purchasepyq:[],
 
         
         
@@ -84,11 +100,23 @@ reducers:{
         const {name,value}=action.payload;
         state.Logindata[name]=value;
     },
+    setpurchasenotes(state,action){
+        state.purchasenotes=action.payload;
+    },
+    setpurchasepyq(state,action){
+        state.purchasepyq=action.payload;
+    },
+    setpurchasecourse(state,action){
+        state.purchasecourse=action.payload;
+    },
     setnoti(state,action){
         state.noti=action.payload;
     },
     setdetailcourse(state,action){
         state.detailcourse=action.payload;
+    },
+    setlearningcourse(state,action){
+        state.learningcourse=action.payload;
     },
     setsearchpyq(state,action){
         state.searchpyq=action.payload;

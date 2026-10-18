@@ -488,4 +488,17 @@ const Verifypayment=async(req,res)=>{
     }
     
 }
-export {Addnotes,Getnotes,Deletenotes,Getnotesclient,Notes_payment,Verifypayment}
+const Getpurchasenotes=async(req,res)=>{
+  try {
+      const student=await Usermodel.findById(req.user.id);
+    if(!req.user.id){
+      return res.json({status:false,message:"Student Login Required"});
+    }
+    const result=student.Student_Notes_Enrollment;
+    return res.json({status:true,result:result});
+
+  } catch (error) {
+    console.log("getting notes purchase error ",error);
+  }
+}
+export {Addnotes,Getnotes,Deletenotes,Getnotesclient,Notes_payment,Verifypayment,Getpurchasenotes}

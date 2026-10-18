@@ -46,7 +46,7 @@ const Dashboard = ({url}) => {
                         </h2>
 
                         <p className="mt-3 text-3xl font-bold text-blue-700">
-                            {item.value}
+                            <h1>{item.value}</h1>
                         </p>
                     </div>
                 ))}

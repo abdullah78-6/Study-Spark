@@ -14,17 +14,10 @@ const Couresedetail = ({url}) => {
     const detailcourse=useSelector(state=>state.main.detailcourse);
     const navigate=useNavigate();
     const backendemail=useSelector(state=>state.main.backendemail);
-    const [flow,setflow]=useState();
-    useEffect(()=>{
+   useEffect(()=>{
     if(!detailcourse.id){
             navigate("/course")
         }
-    },[])
-    useEffect(()=>{
-      const status=localStorage.getItem("status");
-      if(status){
-        setflow(status);
-      }
     },[])
     const Enrolment = async (_id) => {
   if (!backendemail) {
@@ -139,7 +132,7 @@ const Couresedetail = ({url}) => {
 
 
 
-// // FLOW WALA ENROLLMENT
+// // FLOW usestate WALA ENROLLMENT
 // const Enrolment = async (_id) => {
 //   if (!backendemail) {
 //     toast.error("Student login required");
@@ -536,7 +529,7 @@ const Couresedetail = ({url}) => {
             </p>
           </div>
 
-          {flow?<div className="space-y-4">
+          <div className="space-y-4">
             {detailcourse.urls.map((i, index) => (
               <div
                 key={index}
@@ -602,7 +595,7 @@ const Couresedetail = ({url}) => {
                 </Accordion>
               </div>
             ))}
-          </div>:<h1>Please Enroll To Get Access</h1>}
+          </div>
         </section>
 
         {/* Bottom Enrolment Banner */}

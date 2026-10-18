@@ -1,5 +1,5 @@
 import express from "express"
-import { Addnotes, Deletenotes, Getnotes, Getnotesclient, Notes_payment, Verifypayment } from "../controller/Notes-controller.js";
+import { Addnotes, Deletenotes, Getnotes, Getnotesclient, Getpurchasenotes, Notes_payment, Verifypayment } from "../controller/Notes-controller.js";
 import Authmiddleware from "../middleware/teacher-auth-middleware.js";
 import { upload } from "../utils/multer.js";
 import { cacheMiddleware } from "../middleware/cache-middleware.js";
@@ -11,4 +11,5 @@ Notesrouter.delete("/del_notes",Authmiddleware,Deletenotes);
 Notesrouter.get("/get_notes_client",cacheMiddleware(3),Getnotesclient);
 Notesrouter.post("/notes_payment",StudentAuthmiddleware,Notes_payment);
 Notesrouter.post("/chk_payment",StudentAuthmiddleware,Verifypayment);
+Notesrouter.get("/get_purchase_notes",StudentAuthmiddleware,Getpurchasenotes);
 export default Notesrouter;

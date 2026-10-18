@@ -1,5 +1,5 @@
 import express from "express"
-import { Addpyq, Deletepyq, Enrollment, Getpyqclient, Getpyqteacher, Searchapi, Verifypayment } from "../controller/Pyq-controller.js";
+import { Addpyq, Deletepyq, Enrollment, Getpurchasepyq, Getpyqclient, Getpyqteacher, Searchapi, Verifypayment } from "../controller/Pyq-controller.js";
 import Authmiddleware from "../middleware/teacher-auth-middleware.js";
 import { upload } from "../utils/multer.js";
 import { cacheMiddleware } from "../middleware/cache-middleware.js";
@@ -12,4 +12,5 @@ Pyqrouter.get("/get_pyq_client",cacheMiddleware(3),Getpyqclient);
 Pyqrouter.get("/search",cacheMiddleware(3),Searchapi);
 Pyqrouter.post("/pyq_payment",StudentAuthmiddleware,Enrollment);
 Pyqrouter.post("/pyq_chk",StudentAuthmiddleware,Verifypayment)
+Pyqrouter.get("/get_purchase_pyq",StudentAuthmiddleware,Getpurchasepyq);
 export default Pyqrouter;

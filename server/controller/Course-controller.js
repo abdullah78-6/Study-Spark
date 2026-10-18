@@ -719,6 +719,20 @@ const Payment_verifivation = async (req, res) => {
     });
     }
 };
+const Getpurchasecourse=async(req,res)=>{
+  try {
+    const student=await Usermodel.findById(req.user.id);
+    if(!req.user.id){
+      return res.json({status:false,message:"Student Login Required"});
+    }
+  const result=student.Student_Course_Enrollment;
+  return res.json({status:true,result:result});
+
+  } catch (error) {
+    console.log("getting purchase course error",error);
+  }
+
+}
 
 
-export {Addcourse,Deletecourse,Getcourse,Getcourse_teacher,Enroolement_payment,Payment_verifivation}
+export {Addcourse,Deletecourse,Getcourse,Getcourse_teacher,Enroolement_payment,Payment_verifivation,Getpurchasecourse}

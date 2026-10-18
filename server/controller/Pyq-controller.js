@@ -510,4 +510,17 @@ const Verifypayment=async(req,res)=>{
       }
    
 }
-export {Addpyq,Getpyqteacher,Deletepyq,Getpyqclient,Searchapi,Enrollment,Verifypayment};
+const Getpurchasepyq=async(req,res)=>{
+  try {
+     const student=await Usermodel.findById(req.user.id);
+    if(!req.user.id){
+      return res.json({status:false,message:"Student Login Required"});
+    }
+    const result=student.Student_PYQ_Enrollment;
+    return res.json({status:true,result:result});
+  } catch (error) {
+    console.log("getting pyq error",error);
+  }
+
+}
+export {Addpyq,Getpyqteacher,Deletepyq,Getpyqclient,Searchapi,Enrollment,Verifypayment,Getpurchasepyq};

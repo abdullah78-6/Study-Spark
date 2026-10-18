@@ -26,6 +26,9 @@ import Notes from "./Pages/Notes"
 import Couresedetail from "./Pages/Couresedetail"
 import Dashboard from "./Pages/Teacherpages/Dashboard"
 import Mylearning from "./Pages/My-learning"
+import Learning_course from "./Pages/Learning_course"
+import Notes_purchase from "./Pages/Notes_purchase"
+import Pyq_purchase from "./Pages/Pyq_purchase"
 function App() {
   const url="http://localhost:5000"
   const dispatch=useDispatch();
@@ -81,16 +84,19 @@ function App() {
     
     <Route path="/Login" element={<Signup url={url}/>}></Route>
     <Route path="/" element={<Home url={url}/>}></Route>
-    
+    <Route path="/purchase_notes" element={<Notes_purchase url={url}/>}></Route>
     <Route path="/course" element={<Course url={url}/>}></Route>
     <Route path="/quiz" element={<Quiz url={url}/>}></Route>
     <Route path="/PYQs" element={<Pyq url={url}/>}></Route>
     <Route path="/Notes" element={<Notes url={url}/>}></Route>
+    <Route path="/purchase_pyq" element={<Pyq_purchase url={url}/>}></Route>
+    <Route path="/learning_course" element={<Learning_course url={url}/>}></Route>
     <Route path="/quiz_details" element={<Quizdetails url={url}/>}></Route>
     <Route path="/my_learning" element={<Mylearning url={url}/>}></Route>
     <Route path="/course_details" element={<Couresedetail url={url}/>}></Route>
     <Route path="/Contact-us" element={<Contact url={url}/>}></Route>
     <Route path="/teacher_page" element={backendemail2?<Teacher_Homepage url={url}/>:<Navigate to="/Login" replace/>}>
+    
     <Route path="addcourse" element={<Addcourse url={url}/>}></Route>
     <Route path="dashboard" element={<Dashboard url={url}/>}></Route>
     <Route path="Totalcourses" element={<Displayteachercourse url={url}/>}></Route>

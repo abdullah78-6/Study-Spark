@@ -23,13 +23,6 @@ const Notes = ({url}) => {
     const notesclient=useSelector(state=>state.main.notesclient);
     const [openpdfid,setopenpdfid]=useState(null);
     const backendemail=useSelector(state=>state.main.backendemail);
-    const[flow2,setflow2]=useState(false)
-    useEffect(()=>{
-        const status2=localStorage.getItem("status2");
-        if(status2){
-            setflow2(true)
-        }
-    },[]);
     const Fetchnotes=async()=>{
         try {
             const res=await axios.get(url+"/api/notes/get_notes_client",{
@@ -51,11 +44,7 @@ const Notes = ({url}) => {
     const Downloadnotes=(url,publicid)=>{
         
         if(!backendemail){
-            toast.error("User Login Required");
-            return ;
-        }
-        if(!flow2){
-            toast.error("Please Purchase Notes")
+            toast.error("Student Login Required");
             return ;
         }
     const downloadurl=url.replace("/upload/","/upload/fl_attachment/")  
@@ -69,7 +58,7 @@ const Notes = ({url}) => {
 
     }
     const Enrolment = async (_id) => {
-  if (!backendemail) {
+     if (!backendemail) {
     toast.error("Student Login Required");
     return;
   }
@@ -310,7 +299,7 @@ const Notes = ({url}) => {
                                     </div>
 
                                     {/* PDF Toggle */}
-                                  {flow2&&  <button
+                                    <button
                                         type="button"
                                         onClick={() => togglepdf(i._id)}
                                         className={`mt-5 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold transition-colors focus:outline-none focus:ring-4 focus:ring-blue-100 ${
@@ -331,7 +320,7 @@ const Notes = ({url}) => {
                                             </>
                                         )}
                                     </button>
-                                        }   
+                                     
 
                 
                                     {openpdfid === i._id && (
