@@ -75,7 +75,7 @@ return (
                         </h1>
 
                         <p className="mt-2 max-w-xl text-sm leading-6 text-slate-500 sm:text-base">
-                            Access your study materials and preview PDF notes
+                            Access your Notes and preview PDF notes
                             in a comfortable reading space.
                         </p>
                     </div>
@@ -108,8 +108,8 @@ return (
                         </h2>
 
                         <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
-                            Your study materials will appear here once
-                            they are available.
+                            Your Notes will appear here once
+                            you purchase
                         </p>
                     </div>
                 ) : (

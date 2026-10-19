@@ -60,7 +60,7 @@ const Downlaodpyq=(url,publicid)=>{
         document.body.removeChild(link)
 }
 return (
-    <div className="min-h-screen bg-slate-50 text-slate-800">
+    <div className=" flex flex-col min-h-screen  bg-slate-50 text-slate-800 ">
 
       <Navbar url={url}/>
         
@@ -74,7 +74,7 @@ return (
                 Explore Question Papers
               </h2>
               <p className="mt-1 text-sm text-slate-500">
-                Find study material for your college and subjects.
+                Find PYQ for your college and subjects.
               </p>
             </div>
 
@@ -97,8 +97,8 @@ return (
             </h2>
 
             <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
-              No question papers are available for your search right now.
-              Try searching with a different college name.
+              No question papers are available  right now.
+              
             </p>
           </div>
         }

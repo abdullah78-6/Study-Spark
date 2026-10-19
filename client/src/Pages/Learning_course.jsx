@@ -272,7 +272,7 @@ const Learning_course = ({url}) => {
           </div>
         </section>
 
-        {/* Course Modules */}
+        
         <section className="mt-10 mb-12">
           <div className="mb-6">
             <span className="text-sm font-semibold uppercase tracking-wider text-blue-700">
@@ -357,24 +357,8 @@ const Learning_course = ({url}) => {
           </div>
         </section>
 
-        {/* Bottom Enrolment Banner */}
-        <section className="mb-10 overflow-hidden rounded-2xl bg-blue-700 px-6 py-8 shadow-sm sm:px-10 sm:py-10">
-          <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
-            <div>
-              <h2 className="text-2xl font-bold text-white">
-                Ready to Start Learning?
-              </h2>
-
-              <p className="mt-2 max-w-xl text-sm leading-6 text-blue-100 sm:text-base">
-                Enroll in this course and take the next step in your learning journey.
-              </p>
-            </div>
-
-            
-          </div>
-        </section>
-
-      </main>
+        
+</main>
 
       <Footer url={url} />
     </div>

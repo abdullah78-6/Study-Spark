@@ -108,7 +108,7 @@ setloading(true)
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.8, y: 30 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
-        className="fixed bottom-24 right-5 z-50 flex w-[calc(100%-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 shadow-2xl shadow-blue-950/40 sm:right-7"
+        className="fixed bottom-24 right-5 z-50 flex w-[calc(100%-2.5rem)] max-w-sm flex-col overflow-hidden rounded-2xl border border-slate-700 bg-slate-950 shadow-2xl shadow-blue-950/40 sm:right-7 "
         style={{ height: "min(480px, calc(100dvh - 120px))" }}
       >
           <div className="flex shrink-0 items-center justify-between bg-blue-600 px-4 py-4">
