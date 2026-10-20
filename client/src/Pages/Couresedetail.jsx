@@ -528,75 +528,7 @@ const Couresedetail = ({url}) => {
               Open each module to access its lecture.
             </p>
           </div>
-
-          <div className="space-y-4">
-            {detailcourse.urls.map((i, index) => (
-              <div
-                key={index}
-                className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:border-blue-200"
-              >
-                <Accordion>
-                  <AccordionItem
-                    header={
-                      <div className="flex w-full items-center gap-4 py-1 text-left">
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-100 font-bold text-blue-700">
-                          {String(index + 1).padStart(2, '0')}
-                        </div>
-
-                        <div className="min-w-0 flex-1">
-                          <h3 className="font-semibold text-slate-900">
-                            Module {index + 1}
-                          </h3>
-
-                          <p className="mt-1 text-xs text-slate-500 sm:text-sm">
-                            Course lecture · Video lesson
-                          </p>
-                        </div>
-
-                        <span className="mr-2 hidden rounded-lg bg-blue-50 px-3 py-2 text-xs font-medium text-blue-700 sm:inline-block">
-                          View Lecture
-                        </span>
-                      </div>
-                    }
-                  >
-                    <div className="border-t border-slate-100 bg-slate-50 p-4 sm:p-6">
-                      <h4 className="mb-4 font-semibold text-slate-800">
-                        Course Lecture {index + 1}
-                      </h4>
-
-                      <div className="overflow-hidden rounded-xl bg-slate-950">
-                        <MediaController className="aspect-video w-full">
-                          <ReactPlayer
-                            src={i}
-                            slot="media"
-                            controls={false}
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              "--controle": "none"
-                            }}
-                          />
-
-                          <MediaControlBar>
-                            <MediaPlayButton />
-                            <MediaSeekBackwardButton seekOffset={10} />
-                            <MediaSeekForwardButton seekOffset={10} />
-                            <MediaTimeRange />
-                            <MediaTimeDisplay showDuration />
-                            <MediaMuteButton />
-                            <MediaVolumeRange />
-                            <MediaPlaybackRateButton />
-                            <MediaFullscreenButton />
-                          </MediaControlBar>
-                        </MediaController>
-                      </div>
-                    </div>
-                  </AccordionItem>
-                </Accordion>
-              </div>
-            ))}
-          </div>
-        </section>
+</section>
 
         {/* Bottom Enrolment Banner */}
         <section className="mb-10 overflow-hidden rounded-2xl bg-blue-700 px-6 py-8 shadow-sm sm:px-10 sm:py-10">

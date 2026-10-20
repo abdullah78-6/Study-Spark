@@ -206,7 +206,17 @@ const Notes = ({url}) => {
                         </div>
                     </div>
                 </div>
+                <div>
+                    
+        <p className="mx-auto mb-5 max-w-2xl px-4 text-center text-xl capitalize leading-7 font-bold text-blue-600 sm:text-base ">
+  Explore quality study notes on Study·Spark, your AI-powered learning
+  platform. Access organized learning materials, important concepts,
+  exam preparation resources, and revision notes to strengthen your
+  understanding, prepare for semester examinations, and build the
+                    technical skills you need for your future career.
+                    </p>
 
+                </div>
                 {/* Empty State */}
                 {notesclient.length === 0 ? (
                     <div className="rounded-2xl border border-dashed border-blue-200 bg-white px-5 py-16 text-center shadow-sm">
@@ -225,7 +235,7 @@ const Notes = ({url}) => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 items-start gap-6 md:grid-cols-2 xl:grid-cols-3">
-
+                        
                         {notesclient.map((i, index) => (
                             <article
                                 key={i._id}
@@ -253,19 +263,7 @@ const Notes = ({url}) => {
                                                 </h2>
                                             </div>
                                         </div>
-
-                                        <span
-                                            className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${
-                                                ['approved', 'active'].includes(
-                                                    String(i.status).toLowerCase()
-                                                )
-                                                    ? 'bg-emerald-100 text-emerald-700'
-                                                    : 'bg-amber-100 text-amber-700'
-                                            }`}
-                                        >
-                                            {i.status || 'Pending'}
-                                        </span>
-                                    </div>
+                                        </div>
                                 </div>
 
                                 {/* Note Details */}
@@ -297,60 +295,6 @@ const Notes = ({url}) => {
                                             </p>
                                         </div>
                                     </div>
-
-                                    {/* PDF Toggle */}
-                                    <button
-                                        type="button"
-                                        onClick={() => togglepdf(i._id)}
-                                        className={`mt-5 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold transition-colors focus:outline-none focus:ring-4 focus:ring-blue-100 ${
-                                            openpdfid === i._id
-                                                ? 'border border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200'
-                                                : 'bg-blue-600 text-white shadow-md shadow-blue-600/20 hover:bg-blue-700'
-                                        }`}
-                                    >
-                                        {openpdfid === i._id ? (
-                                            <>
-                                                <FaTimes />
-                                                Close PDF Preview
-                                            </>
-                                        ) : (
-                                            <>
-                                                <FaEye />
-                                                Preview Full Notes
-                                            </>
-                                        )}
-                                    </button>
-                                     
-
-                
-                                    {openpdfid === i._id && (
-                                        <section className="mt-6 min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
-                                            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-3 sm:px-5">
-                                                <div className="flex min-w-0 items-center gap-2">
-                                                    <FaFilePdf className="shrink-0 text-lg text-red-500" />
-
-                                                    <div className="min-w-0">
-                                                        <h3 className="text-sm font-bold text-slate-800">
-                                                            PDF Document
-                                                        </h3>
-                                                        <p className="text-xs text-slate-500">
-                                                            Scroll to read all available pages
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                
-                                            </div>
-
-                                            <div className="w-full min-w-0 overflow-x-auto p-2 sm:p-4">
-                                                <div className="mx-auto w-full min-w-0 max-w-5xl overflow-hidden rounded-lg bg-white shadow-sm [&_canvas]:!h-auto [&_canvas]:!max-w-full [&_canvas]:!w-full [&_iframe]:!w-full [&_iframe]:!max-w-full [&_img]:!h-auto [&_img]:!max-w-full [&_img]:!w-full">
-                                                    <Pdfviewer pdfurl={i.filename} />
-                                                </div>
-                                            </div>
-                                        </section>
-                                    )}
-
-
                                     <button
                                     onClick={()=>Enrolment(i._id)}
                                         type="button"
@@ -359,12 +303,7 @@ const Notes = ({url}) => {
                                         <FaShoppingCart />
                                         BUY NOW
                                     </button>
-                                    <button onClick={()=>Downloadnotes(i.filename,i.public_id)}
-                                    type="button"
-                                        className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-blue-200 bg-white px-4 py-3 text-sm font-bold text-blue-700 transition-colors hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100 "
-                                    ><IoMdDownload className='text-xl'/><span>Download</span></button>
-                                    
-                                </div>
+                            </div>
 
                             </article>
                         ))}

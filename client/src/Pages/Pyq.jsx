@@ -320,99 +320,30 @@ const Enrolment = async (_id) => {
                         ₹{i.price}
                       </p>
                     </div>
-
-                    <span className="max-w-28 break-words rounded-full bg-blue-50 px-3 py-1.5 text-center text-xs font-semibold text-blue-700">
-                      {i.status}
-                    </span>
-                  </div>
+</div>
 
                 </div>
 
                 {/* Action Buttons */}
                 <div className="mt-6 flex justify-center items-center flex-wrap  gap-3 border-t border-slate-100 pt-5 sm:grid-cols-2">
-
-           <button
-                    onClick={()=>togglepdf(i._id)}
-                    className={`flex min-h-11 items-center justify-center gap-2 rounded-xl border px-3 py-3 text-sm font-semibold transition ${
-                      openpdfid===i._id
-                        ? "border-blue-200 bg-blue-50 text-blue-700"
-                        : "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
-                    }`}
-                  >
-                    {openpdfid===i._id
-                      ? <><FaTimes/> Close PDF Preview</>
-                      : <><FaEye/> Preview Full PYQ</>}
-                  </button>
-
-                  <button
+                <button
                   onClick={()=>Enrolment(i._id)}
                     className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 active:scale-[0.98]"
                   >
                     <FaShoppingCart />
                     BUY NOW
                   </button>
-                  <button type="button"className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-blue-200 transition hover:bg-blue-700 active:scale-[0.98]"onClick={()=>Downlaodpyq(i.filename,i.public_id)}
-                  >
-                    <IoMdDownload className='text-2xl'/><span>Download</span>
-                  </button>
+                  
 
                 </div>
-
-                {/* PDF Preview */}
-                
-{/* PDF Preview */}
-
-{/* PDF Preview */}
-{openpdfid === i._id && (
-  <section className="mt-6 min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
-    {/* Preview Header */}
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-3 sm:px-5">
-      <div className="flex min-w-0 items-center gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-50 text-lg text-red-500">
-          <FaFilePdf />
-        </div>
-
-        <div className="min-w-0">
-          <h3 className="text-sm font-bold text-slate-800 sm:text-base">
-            PDF Document
-          </h3>
-          <p className="text-xs text-slate-500">
-            Scroll to read all available pages
-          </p>
-        </div>
-      </div>
-
-      <button
-        type="button"
-        onClick={() => togglepdf(i._id)}
-        className="flex shrink-0 items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600"
-      >
-        <FaTimes />
-        Close Preview
-      </button>
-    </div>
-
-    {/* Same PDF Width as Notes.jsx */}
-    <div className="w-full min-w-0 overflow-x-auto p-2 sm:p-4">
-      <div className="mx-auto w-full min-w-0 max-w-5xl overflow-hidden rounded-lg bg-white shadow-sm [&_canvas]:!h-auto [&_canvas]:!max-w-full [&_canvas]:!w-full [&_iframe]:!w-full [&_iframe]:!max-w-full [&_img]:!h-auto [&_img]:!max-w-full [&_img]:!w-full">
-        <Pdfviewer pdfurl={i.filename} />
-      </div>
-    </div>
-
-  </section>
-)}
-
-
-              </div>
+                </div>
             </div>
           ))}
         </div>
 
       </main>
-
-      <Footer url={url}/>
-
-    </div>
+     <Footer url={url}/>
+   </div>
   )
 }
 

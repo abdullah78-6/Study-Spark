@@ -60,14 +60,21 @@ const Downlaodpyq=(url,publicid)=>{
         document.body.removeChild(link)
 }
 return (
-    <div className=" flex flex-col min-h-screen  bg-slate-50 text-slate-800 ">
+    <div className="flex flex-col min-h-screen  bg-slate-50 text-slate-800 ">
 
       <Navbar url={url}/>
         
       <main className="mx-auto min-h-[50vh] max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+      <p className="mb-3 max-w-2xl text-xl leading-7 text-blue-600 font-bold sm:text-xl">
+  Access your purchased papers anytime to strengthen your exam preparation,
+  understand question patterns, revise important topics, and practice with
+  confidence. Preview your question papers online or download them for offline
+  study. Make the most of these resources to improve your problem-solving
+  skills, identify important concepts, and prepare effectively for your upcoming
+  examinations.
+    </p>
 
-
-        <div className="mb-8 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+        <div className="mt-8 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-xl font-bold text-slate-900 sm:text-2xl">
@@ -87,7 +94,7 @@ return (
 
         {/* Empty State */}
         {pyqclient.length===0&&
-          <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-12 text-center sm:py-16">
+          <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-12 text-center sm:py-16 mt-7">
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-3xl text-blue-600">
               <FaSearch />
             </div>

@@ -54,7 +54,7 @@ const Navbar = ({url}) => {
     }
 return (
   <div className="sticky top-0 z-50 w-full border-b border-blue-100 bg-white/95 px-4 py-3 shadow-sm backdrop-blur-md sm:px-6 lg:px-8">
-    <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+    <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 flex-wrap">
 
       <div className="shrink-0">
         <Link to="/"
@@ -143,7 +143,7 @@ return (
         </Link>
       </ul>
 
-      <div className="flex items-center gap-3 sm:gap-5">
+      <div className="flex flex-wrap items-center gap-3 sm:gap-5">
         <div>
           {backendemail ? (
             <button

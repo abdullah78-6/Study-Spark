@@ -26,14 +26,13 @@ const Course = ({url}) => {
   },[])
   const navigate=useNavigate();
   const detailcourse=useSelector(state=>state.main.detailcourse);
-  const Detailsredirect=(name,image,id,modules,description,urls,demo,outcome,feature,gst,price)=>{
+  const Detailsredirect=(name,image,id,modules,description,demo,outcome,feature,gst,price)=>{
     dispatch(control.setdetailcourse({
       name:name,
       image:image,
       id:id,
       modules:modules,
       description:description,
-      urls:urls,
       demo:demo,
       outcome:outcome,
       feature:feature,
@@ -213,7 +212,6 @@ const Course = ({url}) => {
                             i._id,
                             i.module,
                             i.description,
-                            i.urls,
                             i.demo,
                             i.outcome,
                             i.feature,

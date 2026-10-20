@@ -78,6 +78,15 @@ return (
                             Access your Notes and preview PDF notes
                             in a comfortable reading space.
                         </p>
+                        <p className="mt-3 max-w-2xl text-xl leading-7 text-blue-600 sm:text-xl font-bold">
+                       Welcome to your personal study library on Study·Spark! Here you can access
+                      all your purchased study notes in one place. Preview your notes online or
+  download the PDF documents for convenient offline revision. Use these
+  learning resources to strengthen your understanding of important concepts,
+  revise key topics, and prepare more effectively for your semester exams.
+  Learn at your own pace and keep your study materials ready whenever you
+  need them.
+                     </p>
                     </div>
 
                     <div className="flex w-fit items-center gap-3 rounded-xl border border-blue-100 bg-white px-4 py-3 shadow-sm">
