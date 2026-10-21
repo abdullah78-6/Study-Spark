@@ -1,16 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom"; // remove if you don't use react-router
-
-/*
-  THEME TOKENS — change these 5 values to match your Study Spark theme.
-  Everything below uses them, so one edit restyles the whole page.
-*/
+import { Link } from "react-router-dom"; 
 const theme = {
-  ink: "#2563EB",      // deep navy text / dark sections (blue-950)
-  primary: "#2563EB",  // main brand color (same as Tailwind blue-600)
-  spark: "#FBBF24",    // accent (the "spark")
-  soft: "#EFF6FF",     // light tinted background (blue-50)
-  paper: "#FFFFFF",    // page background
+  ink: "#2563EB",      
+  primary: "#2563EB",  
+  spark: "#FBBF24",    
+  soft: "#EFF6FF",     
+  paper: "#FFFFFF",    
 };
 
 const stats = [

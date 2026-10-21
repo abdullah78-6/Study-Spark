@@ -52,7 +52,7 @@ const Sidebar = ({url}) => {
 
     }
 return (
-    <div className='w-full sm:w-64 md:w-72 sm:h-[calc(100vh-64px)] sm:sticky sm:top-16 bg-gradient-to-b from-sky-50 via-white to-white border-r border-sky-100 shadow-sm flex flex-col overflow-hidden'>
+    <div className='hidden  md:block xl:block w-full  sm:w-64 md:w-72 sm:h-[calc(100vh-64px)] sm:sticky sm:top-16 bg-gradient-to-b from-sky-50 via-white to-white border-r border-sky-100 shadow-sm flex flex-col overflow-hidden'>
       <div className='flex flex-col h-full justify-between overflow-hidden'>
 
         {/* profile chip */}

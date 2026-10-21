@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
@@ -10,6 +10,21 @@ const Pdfviewer = ({ pdfurl }) => {
   const [zoom, setzoom] = useState(1);
   const [currentpage, setcurrentpage] = useState(1);
   const [loaderror, setloaderror] = useState("");
+  const [pagewidth,setpagewidth]=useState(700)
+  useEffect(()=>{
+    // setnumpages(0)
+    setcurrentpage(1)
+    setzoom(1)
+    setloaderror("");
+  },[pdfurl])
+  useEffect(()=>{
+    const updatewidth=()=>{
+      setpagewidth(Math.max(250,Math.min(700,window.innerWidth-64)));
+    };
+    updatewidth();
+    window.addEventListener("resize",updatewidth)
+    return ()=>window.removeEventListener("resize",updatewidth);
+  },[])
 const file = useMemo(() => ({ url: pdfurl }), [pdfurl]);
 const zoomIn = () => setzoom((p) => Math.min(+(p + 0.1).toFixed(2), 2));
   const zoomOut = () => setzoom((p) => Math.max(+(p - 0.1).toFixed(2), 0.5));
