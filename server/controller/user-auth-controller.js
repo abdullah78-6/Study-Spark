@@ -53,7 +53,7 @@ const Signin=async(req,res)=>{
        const token=await createtoken(user._id);
        res.cookie("token",token,{
         httpOnly:true,
-        secure:false,
+        secure:true,
         sameSite:"none",
         maxAge:24*60*60*1000
      })
@@ -88,7 +88,7 @@ const Logout=async(req,res)=>{
     try {
         res.clearCookie("token",{
             httpOnly:true,
-            secure:false,
+            secure:true,
             sameSite:"none",
            
         })
@@ -108,7 +108,7 @@ const GoogleLogin=async(req,res)=>{
             const token=createtoken(user._id);
             res.cookie("token",token,{
                 httpOnly:true,
-                secure:false,
+                secure:true,
                 sameSite:"none",//strict for local server
                 maxAge:24*60*60*1000
             })
