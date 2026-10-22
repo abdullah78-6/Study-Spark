@@ -68,7 +68,7 @@ return (
           </div>
         </div>
 
-        <ul className='w-full flex-1 flex flex-col justify-start items-stretch gap-1 p-2.5 sm:p-3 overflow-hidden '>
+        <ul className='w-full   flex flex-1 flex-col justify-start items-stretch gap-5 p-2.5 sm:p-3 overflow-hidden '>
 
           <Link to="/teacher_page/dashboard"
             onClick={()=>dispatch(control.setsidemenu("one"))}

@@ -247,6 +247,7 @@ return (
               id="status"
               className="w-full cursor-pointer rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm text-slate-800 shadow-sm outline-none transition-all hover:border-blue-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 sm:text-base"
             >
+              <option>Select type</option>
               <option value="paid">Paid</option>
               <option value="free">Free</option>
             </select>

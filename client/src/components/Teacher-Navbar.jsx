@@ -43,7 +43,7 @@ const Teacher_Navbar = ({url}) => {
           Study<span className='text-sky-500'>·</span>
           <span className='bg-gradient-to-r from-sky-500 to-cyan-400 bg-clip-text text-transparent'>Spark</span>
         </Link>
-        <ul className=' xl:hidden md:hidden flex flex-row p-2  flex-wrap items-center justify-center gap-5 rounded-xl border border-blue-100 bg-white  shadow-sm  '>
+        <div className=' xl:hidden md:hidden flex flex-row p-2  flex-wrap items-center justify-center gap-5 rounded-xl border border-blue-100 bg-white  shadow-sm  '>
           <div>
           <Link className="rounded-lg   bg-blue-50/50 px-4 py-2 text-sm font-semibold text-slate-700  shadow-sm transition duration-200 hover:bg-blue-700 hover:shadow-md " to="/teacher_page/dashboard">Dashboard</Link>
           </div>
@@ -95,7 +95,7 @@ const Teacher_Navbar = ({url}) => {
                       </button>
                     )}
                   </div>
-        </ul>
+        </div>
 
         <ul className='flex justify-end items-center gap-3 sm:gap-5 flex-wrap'>
 

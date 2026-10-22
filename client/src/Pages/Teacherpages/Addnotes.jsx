@@ -224,6 +224,7 @@ const Addnotes=async(e)=>{
                             id="status"
                             className={`${inputClass} cursor-pointer`}
                         >
+                            <option>Select type</option>
                             <option value="paid">Paid</option>
                             <option value="free">Free</option>
                         </select>

@@ -140,6 +140,7 @@ const fetchnotes=async()=>{
                     {pyq.map((i, index) => {
                         return (
                             <div
+                            key={index}
                                 id={index}
                                 className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-xl"
                             >
