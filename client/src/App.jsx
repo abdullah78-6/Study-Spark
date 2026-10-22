@@ -30,7 +30,7 @@ import Learning_course from "./Pages/Learning_course"
 import Notes_purchase from "./Pages/Notes_purchase"
 import Pyq_purchase from "./Pages/Pyq_purchase"
 function App() {
-  const url="http://localhost:5000"
+  const url="https://study-spark-backend-vyrp.onrender.com"
   const dispatch=useDispatch();
   const backendemail=useSelector(state=>state.main.backendemail);
   const backendemail2=useSelector(state=>state.main.backendemail2);
