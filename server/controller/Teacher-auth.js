@@ -54,7 +54,7 @@ const Signin=async(req,res)=>{
        res.cookie("token2",token,{
         httpOnly:true,
         secure:false,
-        sameSite:"strict",
+        sameSite:"none",
         maxAge:24*60*60*1000
      })
      return res.json({status:true,message:"Login Successfull",email:user.email});
@@ -89,7 +89,7 @@ const Logout=async(req,res)=>{
         res.clearCookie("token2",{
             httpOnly:true,
             secure:false,
-            sameSite:"strict",
+            sameSite:"none",
            
         })
         return res.json({status:true,message:"Teacher Logout"});
@@ -109,7 +109,7 @@ const GoogleLogin=async(req,res)=>{
             res.cookie("token2",token,{
                 httpOnly:true,
                 secure:false,
-                sameSite:"strict",//strict for local server
+                sameSite:"none",//strict for local server
                 maxAge:24*60*60*1000
             })
     
