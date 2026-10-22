@@ -16,7 +16,7 @@ import Airouter from "./routes/AI-ROUTES.js"
 import Dasboardrouter from "./routes/Dashboard-routes.js"
 const app=express()
 app.use(cors({
-    origin:"http://localhost:5173",
+    origin:"https://study-spark-frontend.onrender.com",
     credentials:true
 }))
 app.use(express.json())
